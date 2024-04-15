@@ -17,25 +17,14 @@
 ## Juli
 Realizar la implementación de la parte lógica.
 
-
-
 ## Feli
 Ver como utilizar los sprites brindados por la cátedra.
 
 Ver como es la implementación de un Chess para copiar el sistema de las casillas.
 
-Hacer la pantalla inicial como método de elección de tamaño de mapa.
-
-Hacer los 5 mapas.
-
-Hacer que todas las interfaces se vean lindas, amigables y prolijas.
+Hacer e implementar todo lo necesario de los 5 mapas.
 
 ### Botones a desarrollar
-
-Menu:
-
-- Seleccionar los 5 mapas.
-- Cerrar el programa.
 
 Mapas:
 
@@ -45,17 +34,10 @@ Mapas:
 - Botón de esperar a los robots.
 - Botón de volver a selección de mapa.
 - Botón de reinicio (Se puede usar ingame o para volver a jugar al morir).
-- Cerrar el programa.
 
 ---
 
 ## Anotaciones Globales
-Juego base "Chase".
-
-Hacer configurable el tamaño.
-
-Que no termine cuando perdes sino cuando cerras.
-
 El jugador comienza en el centro de la grilla.
 
 Los robots se inicializan aleatorios pero no, en los 9 espacios centrales.
