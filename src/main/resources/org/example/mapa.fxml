@@ -13,20 +13,24 @@
       <AnchorPane maxHeight="40.0" maxWidth="500.0" minHeight="40.0" minWidth="500.0" prefHeight="40.0" prefWidth="500.0">
          <children>
             <TextArea layoutX="257.0" layoutY="3.0" prefHeight="38.0" prefWidth="73.0" text="Puntos: 0" />
-            <TextArea layoutX="182.0" layoutY="2.0" prefHeight="15.0" prefWidth="60.0" text="Nivel: 0" />
+            <TextArea layoutX="182.0" layoutY="3.0" prefHeight="38.0" prefWidth="73.0" text="Nivel: 0" />
               <Button fx:id="BotonMenu" alignment="CENTER" layoutX="67.0" layoutY="-10.0" onAction="#switchToMenu" prefHeight="50.0" prefWidth="100.0" text="Volver al menú" textFill="#3208ff">
                <font>
                   <Font name="Arial" size="12.0" />
                </font>
             </Button>
-            <Button layoutX="356.0" layoutY="-11.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Reiniciar" textFill="#3208ff">
+            <Button fx:id = "Reiniciar" alignment ="CENTER" layoutX="356.0" layoutY="-10.0" onAction = "#switchToMenu" prefHeight="50.0" prefWidth="100.0" text="Reiniciar" textFill="#3208ff">
                <font>
                   <Font name="Arial" size="12.0" />
                </font>
             </Button>
          </children>
       </AnchorPane>
-        <GridPane fx:id="tableroGridPane" />
+      <AnchorPane prefHeight="50.0" prefWidth="500.0">
+         <children>
+              <GridPane fx:id="tableroGridPane" layoutX="394.0" layoutY="3.0" prefHeight="58.0" prefWidth="58.0" alignment = "CENTER" />
+         </children>
+      </AnchorPane>
       <AnchorPane maxHeight="90.0" maxWidth="500.0" minHeight="90.0" minWidth="500.0" prefHeight="90.0" prefWidth="500.0">
          <children>
             <Button layoutX="180.0" layoutY="3.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Teletransporte Seguro" textFill="#3208ff">
