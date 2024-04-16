@@ -7,8 +7,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
 
-import static java.lang.Thread.sleep;
-
 /**
  * JavaFX App
  */
