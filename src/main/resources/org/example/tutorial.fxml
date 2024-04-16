@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="CENTER" prefHeight="400.0" prefWidth="500.0" spacing="20.0" style="-fx-background-color: lightgray; -fx-border-color: red;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.ControladorTutorial">
+<VBox alignment="CENTER" prefHeight="800.0" prefWidth="1000.0" spacing="20.0" style="-fx-background-color: lightgray; -fx-border-color: red;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.ControladorTutorial">
     <children>
         <Label text="¡Bienvenido al tutorial!" textFill="#c62727">
          <font>
@@ -64,8 +64,8 @@
             <Font name="Arial" size="18.0" />
          </font>
       </Text>
-      <Text fill="#5c0a0a" strokeType="OUTSIDE" strokeWidth="0.0" text="Como jugador cuentas con la capacidad de utilizar la acción &quot;teletransporte aleatorio&quot; una infinita cantidad de veces." />
-      <Text fill="#5c0a0a" strokeType="OUTSIDE" strokeWidth="0.0" text="También puedes utilizar la acción &quot;teletransporte seguro&quot; una finita cantidad de veces." />
+      <Text fill="#5c0a0a" strokeType="OUTSIDE" strokeWidth="0.0" text="Como jugador cuentas con la capacidad de utilizar la acción &quot;teletransporte aleatorio&quot; (T) una infinita cantidad de veces." />
+      <Text fill="#5c0a0a" strokeType="OUTSIDE" strokeWidth="0.0" text="También puedes utilizar la acción &quot;teletransporte seguro&quot; (G) una finita cantidad de veces." />
       <Text fill="#5c0a0a" strokeType="OUTSIDE" strokeWidth="0.0" text="Por último, puedes utilizar el botón de &quot;reiniciar&quot; para volver a comenzar la partida (sin importar que no hayas perdido)." />
       <Text fill="#5c0a0a" strokeType="OUTSIDE" strokeWidth="0.0" text="Ahora que ya sabes todo lo necesario para jugar como todo un maestro, demuéstralo.">
          <font>
@@ -77,11 +77,11 @@
             <Font name="Arial Bold" size="18.0" />
          </font>
       </Text>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" />
         <Button fx:id="BotonMenu" onAction="#switchToMenu" text="Volver al menú" textFill="#3208ff">
          <font>
             <Font name="Arial" size="12.0" />
          </font></Button>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" />
     </children>
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
