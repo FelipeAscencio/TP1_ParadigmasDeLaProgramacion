@@ -5,12 +5,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
 public class ControladorMenu {
-
     public Button Mapa1;
     public Button Mapa2;
     public Button Mapa3;
     public Button Mapa4;
     public Button Mapa5;
+    public Button Tutorial;
 
     @FXML
     private void switchToMapa1() throws IOException {
@@ -41,5 +41,4 @@ public class ControladorMenu {
     private void switchToTutorial() throws IOException {
         App.setRoot("tutorial");
     }
-
 }
