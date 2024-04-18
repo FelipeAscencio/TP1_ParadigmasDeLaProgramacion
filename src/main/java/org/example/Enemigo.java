@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example;
 
 public abstract class Enemigo {
     private int filaActual;

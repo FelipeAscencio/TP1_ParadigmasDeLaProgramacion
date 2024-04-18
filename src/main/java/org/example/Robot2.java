@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example;
 
 public class Robot2 extends Enemigo {
     public Robot2(int filaInicial, int columnaInicial) {

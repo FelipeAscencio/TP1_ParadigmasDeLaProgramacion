@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example;
 
 public class Jugador {
     private int filaActual;
@@ -16,6 +16,14 @@ public class Jugador {
 
     public int getColumnaActual() {
         return columnaActual;
+    }
+
+    public void setFila(int fila){
+        filaActual=fila;
+    }
+
+    public void setColumna(int columna){
+        columnaActual=columna;
     }
 
     public int getUsosTeletransportacion() {

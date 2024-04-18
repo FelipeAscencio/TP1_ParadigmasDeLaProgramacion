@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example;
 
 public class Tablero {
     private int filas;
@@ -12,12 +12,37 @@ public class Tablero {
         this.matriz = new Object[filas][columnas];
     }
 
+    public void vaciar(){
+        for (int i=0; i<filas; i++){
+            for (int j=0; j<columnas; j++){
+                this.eliminarElemento(i,j);
+            }
+        }
+    }
+
+    public boolean hayExplosion(int fila, int col){
+        Object elemento = getElemento(fila, col);
+        return elemento instanceof Explosion;
+    }
+
+    public void eliminarElemento(int fila, int columna) {
+        matriz[fila][columna] = null;
+    }
+
+    public void agregarElemento(Object elemento, int filaNueva, int colNueva){
+        matriz[filaNueva][colNueva]=elemento;
+    }
+
     public int getFilas() {
         return filas;
     }
 
     public int getColumnas() {
         return columnas;
+    }
+
+    public Object[][] getMatriz() {
+        return matriz;
     }
 
     public Object getElemento(int fila, int columna) {
