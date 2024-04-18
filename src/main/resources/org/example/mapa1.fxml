@@ -18,7 +18,7 @@
                   <Font name="Arial" size="12.0" />
                </font>
             </Button>
-            <Button fx:id="Reiniciar" alignment="CENTER" layoutX="356.0" layoutY="-10.0" onAction="#switchToMenu" prefHeight="50.0" prefWidth="100.0" text="Reiniciar" textFill="#3208ff">
+            <Button fx:id="Reiniciar" alignment="CENTER" layoutX="356.0" layoutY="-10.0" onAction="#reloadMapa" prefHeight="50.0" prefWidth="100.0" text="Reiniciar" textFill="#3208ff">
                <font>
                   <Font name="Arial" size="12.0" />
                </font>
@@ -42,17 +42,17 @@
       </AnchorPane>
       <AnchorPane maxHeight="90.0" maxWidth="500.0" minHeight="90.0" minWidth="500.0" prefHeight="90.0" prefWidth="500.0">
          <children>
-            <Button fx:id="TeletransporteSeguro" layoutX="180.0" layoutY="3.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Teletransporte Seguro" textFill="#3208ff">
+            <Button fx:id="TeletransporteSeguro" layoutX="180.0" layoutY="3.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" onAction="#teletransporteSeguro" text="Tele. Seguro (G)" textFill="#3208ff">
                <font>
                   <Font name="Arial" size="12.0" />
                </font>
             </Button>
-            <Button fx:id="TeletransporteAleatorio" layoutX="349.0" layoutY="3.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Teletransporte Aleatorio" textFill="#3208ff">
+            <Button fx:id="TeletransporteAleatorio" layoutX="349.0" layoutY="3.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" onAction="#teletransporteAleatorio" text="Tele. Aleatorio (T)" textFill="#3208ff">
                <font>
                   <Font name="Arial" size="12.0" />
                </font>
             </Button>
-            <Button fx:id="EsperarRobots" layoutX="8.0" layoutY="2.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Esperar a los robotos" textFill="#3208ff">
+            <Button fx:id="EsperarRobots" layoutX="8.0" layoutY="2.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" onAction="#noMoverse" text="Esperar a los robots (X)" textFill="#3208ff">
                <font>
                   <Font name="Arial" size="12.0" />
                </font>
