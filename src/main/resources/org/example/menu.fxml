@@ -58,7 +58,7 @@
          <font>
             <Font name="Arial" size="12.0" />
          </font></Button>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Seleccione el tamaño del mapa que quiere jugar:">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Pulsa 'JUGAR' para empezar tu partida:">
          <fill>
             <RadialGradient centerX="0.5165745856353591" centerY="0.5379146919431279" focusDistance="-0.02298850574712641" radius="0.7126436781609196">
                <stops>
@@ -78,26 +78,50 @@
          <font>
             <Font name="Arial" size="16.0" />
          </font></Text>
-        <Button fx:id="Mapa1" onAction="#switchToMapa1" text="15x15" textFill="#3208ff">
+        <Button fx:id="Mapa" onAction="#switchToMapa" text="JUGAR" textFill="#3208ff">
          <font>
             <Font name="Arial" size="12.0" />
          </font></Button>
-        <Button fx:id="Mapa2" onAction="#switchToMapa2" text="19x19" textFill="#3208ff">
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Si quieres nuevos retos, recuerda que puedes modificar el tamaño del mapa a tu gusto.">
+            <fill>
+                <RadialGradient centerX="0.5165745856353591" centerY="0.5379146919431279" focusDistance="-0.02298850574712641" radius="0.7126436781609196">
+                    <stops>
+                        <Stop>
+                            <color>
+                                <Color red="1.0" />
+                            </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                            <color>
+                                <Color />
+                            </color>
+                        </Stop>
+                    </stops>
+                </RadialGradient>
+            </fill>
             <font>
                 <Font name="Arial" size="12.0" />
-            </font></Button>
-        <Button fx:id="Mapa3" onAction="#switchToMapa3" text="23x23" textFill="#3208ff">
+            </font></Text>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podrás elegir cualquier valor de filas y columnas entre '10 x 10' y '30 x 30', ¡sé creativo!">
+            <fill>
+                <RadialGradient centerX="0.5165745856353591" centerY="0.5379146919431279" focusDistance="-0.02298850574712641" radius="0.7126436781609196">
+                    <stops>
+                        <Stop>
+                            <color>
+                                <Color red="1.0" />
+                            </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                            <color>
+                                <Color />
+                            </color>
+                        </Stop>
+                    </stops>
+                </RadialGradient>
+            </fill>
             <font>
                 <Font name="Arial" size="12.0" />
-            </font></Button>
-        <Button fx:id="Mapa4" onAction="#switchToMapa4" text="29x29" textFill="#3208ff">
-            <font>
-                <Font name="Arial" size="12.0" />
-            </font></Button>
-        <Button fx:id="Mapa5" onAction="#switchToMapa5" text="35x35" textFill="#3208ff">
-            <font>
-                <Font name="Arial" size="12.0" />
-            </font></Button>
+            </font></Text>
     </children>
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
