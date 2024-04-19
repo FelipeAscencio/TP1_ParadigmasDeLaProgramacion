@@ -35,14 +35,14 @@ public class ControladorMapa implements Initializable {
     private static final int CASILLAS_DEFAULT = 15;
     private static final int CASILLAS_MIN = 15;
     private static final int CASILLAS_MAX = 30;
-    private static final int TAMANIO_CELDA_FIL = 40;
+    private static final int TAMANIO_CELDA_FIL = 50;
     private static final int TAMANIO_CELDA_COL = 130;
     private static final int TAMANIO_SPRITE = 32;
     private static final int CANTIDAD_SPRITES = 14;
     private static int filas;
     private static int columnas;
     private WritableImage[] sprites;
-    public Juego juego;
+    private Juego juego;
 
     public ControladorMapa() {
         this.filas = CASILLAS_DEFAULT;
@@ -51,13 +51,36 @@ public class ControladorMapa implements Initializable {
 
     private void inicializarGrid (){
         tableroGridPane.getChildren().clear();
-
         for (int fila = 0; fila < filas; fila++) {
             for (int columna = 0; columna < columnas; columna++) {
                 StackPane celda = new StackPane();
                 celda.setPrefSize(TAMANIO_CELDA_FIL, TAMANIO_CELDA_COL);
                 celda.setStyle("-fx-background-color: " + ((fila + columna) % 2 == 0 ? "white" : "lightblue"));
                 tableroGridPane.add(celda, columna, fila);
+
+                Object elemento = juego.getTablero().getElemento(fila, columna);
+                if (elemento != null) {
+                    Image nuevaImagen = obtenerImagenElemento(elemento);
+                    ImageView spriteView = new ImageView(nuevaImagen);
+                    celda.getChildren().add(spriteView);
+                }
+            }
+        }
+    }
+
+    private void actualizarGrid(){
+        for (int fila=0;fila<filas;fila++){
+            for (int col=0; col<columnas;col++){
+                Object elemento=juego.getTablero().getElemento(fila,col);
+                StackPane celda = (StackPane) obtenerCeldaEnPosicion(tableroGridPane, fila, col);
+                if (elemento!=null){
+                    Image nuevaImagen=obtenerImagenElemento(elemento);
+                    ImageView spriteView = new ImageView(nuevaImagen);
+                    celda.getChildren().add(spriteView);
+                }
+                else {
+                    celda.getChildren().clear();
+                }
             }
         }
     }
@@ -127,13 +150,27 @@ public class ControladorMapa implements Initializable {
         sprites = separarSprites(spriteStrip, spriteWidth, spriteHeight, numSprites);
     }
 
-    private void imprimirSpriteEnCelda(int fila, int columna, Image sprite) {
+    private void agregarSpriteEnCelda(int fila, int columna, Image sprite) {
         StackPane celda = (StackPane) tableroGridPane.getChildren().get(calcularIndiceNodo(tableroGridPane, fila, columna));
 
         celda.getChildren().clear();
 
         ImageView spriteView = new ImageView(sprite);
         celda.getChildren().add(spriteView);
+    }
+
+    private Image obtenerImagenElemento(Object elemento) {
+        if (elemento instanceof Jugador) {
+            return sprites[0];
+        } else if (elemento instanceof Robot1) {
+            return sprites[6];
+        } else if (elemento instanceof Robot2) {
+            return sprites[10];
+        } else if (elemento instanceof Explosion){
+            return sprites[13];
+        }
+
+        return null;
     }
 
     @Override
@@ -143,8 +180,6 @@ public class ControladorMapa implements Initializable {
         inicializarSprites();
         inicializarGrid();
         inicializarKeys();
-
-        //imprimirSpriteEnCelda(2, 2, sprites[1]);
 
         Platform.runLater(() -> {
             tableroGridPane.requestFocus();
@@ -165,7 +200,6 @@ public class ControladorMapa implements Initializable {
         return null;
     }
 
-    @FXML
     public void detectarDireccion(MouseEvent event){
         int filaJugador = juego.getJugador().getFilaActual();
         int colJugador = juego.getJugador().getColumnaActual();
@@ -216,19 +250,6 @@ public class ControladorMapa implements Initializable {
         }
     }
 
-    @FXML
-    public void moverJugador(MouseEvent event) {
-        double x = event.getX() - juego.getJugador().getColumnaActual();
-        double y = event.getY() - juego.getJugador().getFilaActual();
-
-        // Determina la dirección de movimiento en función de la posición del mouse
-        Direccion direccion = Direccion.calcular(x,y);
-
-        // Mueve al jugador en la dirección calculada
-        juego.getJugador().mover(direccion);
-        juego.moverEnemigos();
-    }
-
     private void actualizarIconoEnPosicion(int fila, int columna, String rutaIcono) {
         // Obtener el StackPane en la posición especificada
         StackPane stackPane = (StackPane) obtenerCeldaEnPosicion(tableroGridPane,fila, columna);
@@ -240,32 +261,6 @@ public class ControladorMapa implements Initializable {
             // Agregar el nuevo icono al StackPane
             stackPane.getChildren().add(nuevoIcono);
         }
-    }
-
-    private void actualizarGrid() {
-        Object[][] matrizTablero = juego.getTablero().getMatriz(); // Obtener la matriz del tablero
-
-        for (int fila = 0; fila < filas; fila++) {
-            for (int columna = 0; columna < columnas; columna++) {
-                Object elemento = matrizTablero[fila][columna];
-                if (elemento != null) {
-                    actualizarIconoEnPosicion(fila,columna,obtenerImagenElemento(elemento));
-                }
-            }
-        }
-    }
-
-    private String obtenerImagenElemento(Object elemento) {
-        if (elemento instanceof Jugador) {
-            return "rutaIconoJugador.png";
-        } else if (elemento instanceof Robot1) {
-            return "rutaIconoRobot1.png";
-        } else if (elemento instanceof Robot2) {
-            return "rutaIconoRobot2.png";
-        }else if (elemento instanceof Explosion) {
-            return "rutaIconoExplosion.png";
-        }
-        return null;
     }
 
     @FXML
@@ -313,41 +308,52 @@ public class ControladorMapa implements Initializable {
     @FXML
     private void comandoA() {
         TextNivelActual.setText("A pulsada");
+        juego.moverJugadorenTablero(Direccion.IZQUIERDA);
+        actualizarGrid();
     }
 
     @FXML
     private void comandoS() {
         TextNivelActual.setText("S pulsada");
+        juego.moverJugadorenTablero(Direccion.ABAJO);
+        actualizarGrid();
+
     }
 
     @FXML
     private void comandoD() {
         TextNivelActual.setText("D pulsada");
+        juego.moverJugadorenTablero(Direccion.DERECHA);
     }
 
     @FXML
     private void comandoW() {
         TextNivelActual.setText("W pulsada");
+        juego.moverJugadorenTablero(Direccion.ARRIBA);
     }
 
     @FXML
     private void comandoQ() {
         TextNivelActual.setText("Q pulsada");
+        juego.moverJugadorenTablero(Direccion.DIAGONAL_ARRIBA_IZQUIERDA);
     }
 
     @FXML
     private void comandoE() {
         TextNivelActual.setText("E pulsada");
+        juego.moverJugadorenTablero(Direccion.DIAGONAL_ARRIBA_DERECHA);
     }
 
     @FXML
     private void comandoZ() {
         TextNivelActual.setText("Z pulsada");
+        juego.moverJugadorenTablero(Direccion.DIAGONAL_ABAJO_IZQUIERDA);
     }
 
     @FXML
     private void comandoC() {
         TextNivelActual.setText("C pulsada");
+        juego.moverJugadorenTablero(Direccion.DIAGONAL_ABAJO_DERECHA);
     }
 
     @FXML

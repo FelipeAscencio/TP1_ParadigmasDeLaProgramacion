@@ -1,24 +1,32 @@
 package org.example;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 
 public class Juego {
     private Jugador jugador;
     private Tablero tablero;
     private List<Enemigo> enemigos;
-    private int CANTIDAD_INICIAL_ENEMIGOS=10;
+    private int CANTIDAD_INICIAL_ENEMIGOS=5;
     private int nivel;
     private int puntos;
 
     public Juego(int filas, int columnas){
         tablero=new Tablero(filas,columnas);
         jugador=new Jugador(filas/2,columnas/2,1);
+        tablero.agregarElemento(jugador,filas/2,columnas/2);
         enemigos=new ArrayList<>();
+        generarEnemigos(CANTIDAD_INICIAL_ENEMIGOS);
     }
+    public void jugadorteletransportacionrandom(){
+        Random random = new Random();
+        int filaAleatoria = random.nextInt(tablero.getFilas());
+        int columnaAleatoria = random.nextInt(tablero.getColumnas());
+        jugador.setFila(filaAleatoria);
+        jugador.setColumna(columnaAleatoria);
+        verificarColisionJugador();
 
+    }
     private void generarEnemigos(int cantidadEnemigos) {
         Random random = new Random();
         for (int i = 0; i < cantidadEnemigos; i++) {
@@ -40,8 +48,8 @@ public class Juego {
         }
     }
 
-    public void iniciarNivel(int cantidadEnemigos) {
-        this.generarEnemigos(cantidadEnemigos);
+    public void iniciarNivel(int cantidadEnemigos, int nivel) {
+        generarEnemigos(cantidadEnemigos+(nivel-1)*2);
     }
 
     private boolean esPosicionOcupada(int fila, int columna) {
@@ -49,7 +57,7 @@ public class Juego {
     }
 
     private boolean esMovimientoValido(int fil, int col) {
-        return !(fil<0 || fil>=tablero.getFilas() || col<0 || col>=tablero.getColumnas());
+        return fil>0 || fil<tablero.getFilas() || col>0 || col<tablero.getColumnas();
     }
 
     public void moverJugadorenTablero(Direccion direccion) {
@@ -71,16 +79,20 @@ public class Juego {
 
     public void moverEnemigos() {
         int filamoverse=jugador.getFilaActual();
-        int colmoverse= jugador.getColumnaActual();;
+        int colmoverse= jugador.getColumnaActual();
+        List<Enemigo> enemigosAEliminar = new ArrayList<>();
         for (Enemigo enemigo : enemigos) {
             tablero.eliminarElemento(enemigo.getFilaActual(),enemigo.getColumnaActual());
             enemigo.mover(filamoverse, colmoverse);
             if (tablero.hayExplosion(enemigo.getFilaActual(),enemigo.getColumnaActual())){
-                enemigos.remove(enemigo);
-                return;
+                enemigosAEliminar.add(enemigo);
+                continue;
             }
             tablero.agregarElemento(enemigo,filamoverse, colmoverse);
-            verificarColisionEnemigos();
+        }
+        enemigos.removeAll(verificarColisionEnemigos(enemigosAEliminar));
+        if (enemigos.isEmpty()) {
+            reiniciarJuego(nivel++);
         }
     }
 
@@ -95,24 +107,24 @@ public class Juego {
             }
         }
         if (reiniciar || tablero.hayExplosion(jugador.getFilaActual(), jugador.getColumnaActual())) {
-            reiniciar = true;
-            reiniciarJuego(CANTIDAD_INICIAL_ENEMIGOS, 1);
+            reiniciarJuego(1);
         }
 
     }
 
-    public void verificarColisionEnemigos() {
+    public List<Enemigo> verificarColisionEnemigos(List<Enemigo> enemigosAEliminar) {
         for (int i = 0; i < enemigos.size(); i++) {
+            Enemigo enemigo1 = enemigos.get(i);
+            if (enemigosAEliminar.contains(enemigo1)) {
+                continue;
+            }
             for (int j = i + 1; j < enemigos.size(); j++) {
-                Enemigo enemigo1 = enemigos.get(i);
                 Enemigo enemigo2 = enemigos.get(j);
 
                 if (enemigo1.getFilaActual() == enemigo2.getFilaActual() &&
                         enemigo1.getColumnaActual() == enemigo2.getColumnaActual()) {
-
-                    // Eliminar los enemigos involucrados en la colisión
-                    enemigos.remove(enemigo1);
-                    enemigos.remove(enemigo2);
+                    enemigosAEliminar.add(enemigo1);
+                    enemigosAEliminar.add(enemigo2);
 
                     // Crear una explosión en la posición de la colisión
                     Explosion explosion = new Explosion(enemigo1.getFilaActual(), enemigo1.getColumnaActual());
@@ -120,22 +132,23 @@ public class Juego {
                 }
             }
         }
+        return enemigosAEliminar;
     }
 
 
-    public void reiniciarJuego(int cantidadenemigos, int nivel) {
+    public void reiniciarJuego(int nivel) {
         // Vaciar el tablero
         tablero.vaciar();
 
         // Generar nuevos enemigos (si es necesario)
         if (enemigos.isEmpty()) {
-            generarEnemigos(cantidadenemigos+(nivel-1)*2);
+            iniciarNivel(CANTIDAD_INICIAL_ENEMIGOS,nivel);
         } else {
             enemigos.clear();
             // Restablecer la posición del jugador
             jugador.setFila(tablero.getFilas() / 2);
             jugador.setColumna(tablero.getColumnas() / 2);
-            generarEnemigos(cantidadenemigos);
+            iniciarNivel(CANTIDAD_INICIAL_ENEMIGOS,1);
             puntos=0;
         }
     }

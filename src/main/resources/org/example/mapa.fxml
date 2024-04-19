@@ -55,7 +55,7 @@
       </AnchorPane>
       <AnchorPane prefHeight="367.0" prefWidth="958.0">
          <children>
-              <GridPane fx:id="tableroGridPane" alignment="CENTER" gridLinesVisible="true" layoutX="20.0" layoutY="2.0" onMouseClicked="#moverJugador" onMouseMoved="#detectarDireccion" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="2.0" />
+              <GridPane fx:id="tableroGridPane" alignment="CENTER" gridLinesVisible="true" layoutX="20.0" layoutY="2.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="2.0" />
          </children>
       </AnchorPane>
       <AnchorPane maxHeight="90.0" maxWidth="500.0" minHeight="42.0" minWidth="500.0" prefHeight="42.0" prefWidth="500.0">
