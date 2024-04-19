@@ -5,8 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
 public class ControladorMenu {
-    public Button Mapa;
-    public Button Tutorial;
+    public Button BotonMapa;
+    public Button BotonTutorial;
 
     @FXML
     private void switchToMapa() throws IOException {

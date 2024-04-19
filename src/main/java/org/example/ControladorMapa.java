@@ -10,26 +10,38 @@ import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
 public class ControladorMapa implements Initializable {
     @FXML
     public GridPane tableroGridPane;
+    public Button BotonMenu;
+    public Button BotonReiniciar;
+    public Button BotonTeletransporteSeguro;
+    public Button BotonTeletransporteAleatorio;
+    public Button BotonEsperarRobots;
+    public Button BotonCambiarMapa;
+    public Label TextTPRestantes;
+    public Label TextNivelActual;
+    public Label TextPuntaje;
+    public TextField FieldFilas;
+    public TextField FieldColumnas;
     private static final int CASILLAS_DEFAULT = 15;
+    private static final int CASILLAS_MIN = 15;
+    private static final int CASILLAS_MAX = 30;
+    private static final int TAMANIO_CELDA_FIL = 40;
+    private static final int TAMANIO_CELDA_COL = 130;
+    private static final int TAMANIO_SPRITE = 32;
+    private static final int CANTIDAD_SPRITES = 14;
     private static int filas;
     private static int columnas;
-    private static final int tamaniocelda = 40;
-    public Button Menu;
-    public Button Reiniciar;
-    public Button TeletransporteSeguro;
-    public Button TeletransporteAleatorio;
-    public Button EsperarRobots;
-    public Label TPRestantes;
-    public Label NivelActual;
-    public Label Puntaje;
+    private WritableImage[] sprites;
     public Juego juego;
 
     public ControladorMapa() {
@@ -38,10 +50,12 @@ public class ControladorMapa implements Initializable {
     }
 
     private void inicializarGrid (){
+        tableroGridPane.getChildren().clear();
+
         for (int fila = 0; fila < filas; fila++) {
             for (int columna = 0; columna < columnas; columna++) {
                 StackPane celda = new StackPane();
-                celda.setPrefSize(tamaniocelda, tamaniocelda);
+                celda.setPrefSize(TAMANIO_CELDA_FIL, TAMANIO_CELDA_COL);
                 celda.setStyle("-fx-background-color: " + ((fila + columna) % 2 == 0 ? "white" : "lightblue"));
                 tableroGridPane.add(celda, columna, fila);
             }
@@ -90,12 +104,47 @@ public class ControladorMapa implements Initializable {
         });
     }
 
+    private WritableImage[] separarSprites(ImageView spriteStrip, int spriteWidth, int spriteHeight, int numSprites) {
+        WritableImage[] sprites = new WritableImage[numSprites];
+
+        PixelReader pixelReader = spriteStrip.getImage().getPixelReader();
+
+        for (int i = 0; i < numSprites; i++) {
+            int startX = i * spriteWidth;
+            int startY = 0;
+            WritableImage spriteImage = new WritableImage(pixelReader, startX, startY, spriteWidth, spriteHeight);
+            sprites[i] = spriteImage;
+        }
+        return sprites;
+    }
+
+    private void inicializarSprites() {
+        ImageView spriteStrip = new ImageView("file:doc/modelos.png");
+        int spriteWidth = TAMANIO_SPRITE;
+        int spriteHeight = TAMANIO_SPRITE;
+        int numSprites = CANTIDAD_SPRITES;
+
+        sprites = separarSprites(spriteStrip, spriteWidth, spriteHeight, numSprites);
+    }
+
+    private void imprimirSpriteEnCelda(int fila, int columna, Image sprite) {
+        StackPane celda = (StackPane) tableroGridPane.getChildren().get(calcularIndiceNodo(tableroGridPane, fila, columna));
+
+        celda.getChildren().clear();
+
+        ImageView spriteView = new ImageView(sprite);
+        celda.getChildren().add(spriteView);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         juego=new Juego(filas,columnas);
 
+        inicializarSprites();
         inicializarGrid();
         inicializarKeys();
+
+        //imprimirSpriteEnCelda(2, 2, sprites[1]);
 
         Platform.runLater(() -> {
             tableroGridPane.requestFocus();
@@ -118,12 +167,13 @@ public class ControladorMapa implements Initializable {
 
     @FXML
     public void detectarDireccion(MouseEvent event){
-        int filaJugador=juego.getJugador().getFilaActual();
-        int colJugador=juego.getJugador().getColumnaActual();
+        int filaJugador = juego.getJugador().getFilaActual();
+        int colJugador = juego.getJugador().getColumnaActual();
         double diffX = event.getX() - colJugador;
         double diffY = event.getY() - filaJugador;
-        double tamanioCursor = 200;
+        Direccion direccion = Direccion.calcular(diffX, diffY);
 
+        double tamanioCursor = 300;
         Image cursorArriba = new Image("file:doc/up.png", tamanioCursor, tamanioCursor, true, true);
         Image cursorAbajo = new Image("file:doc/down.png", tamanioCursor, tamanioCursor, true, true);
         Image cursorIzq = new Image("file:doc/left.png", tamanioCursor, tamanioCursor, true, true);
@@ -133,8 +183,6 @@ public class ControladorMapa implements Initializable {
         Image cursorAbaIzq = new Image("file:doc/down-left.png", tamanioCursor, tamanioCursor, true, true);
         Image cursorAbaDer = new Image("file:doc/down-right.png", tamanioCursor, tamanioCursor, true, true);
         Image cursorPunto = new Image("file:doc/point.png", tamanioCursor, tamanioCursor, true, true);
-
-        Direccion direccion = Direccion.calcular(diffX, diffY);
 
         // Cambia el cursor del mouse según la dirección calculada
         switch (direccion) {
@@ -232,74 +280,88 @@ public class ControladorMapa implements Initializable {
 
     @FXML
     private void teletransporteSeguro() throws IOException {
-        NivelActual.setText("TP Safe");
+        TextNivelActual.setText("TP Safe");
         tableroGridPane.requestFocus();
     }
 
     @FXML
     private void teletransporteAleatorio() throws IOException {
-        NivelActual.setText("TP Rand");
+        TextNivelActual.setText("TP Rand");
         tableroGridPane.requestFocus();
     }
 
     @FXML
     private void noMoverse() throws IOException {
-        NivelActual.setText("No Move");
+        TextNivelActual.setText("No Move");
+        tableroGridPane.requestFocus();
+    }
+
+    @FXML
+    private void cambiarMapa() throws IOException {
+        int nuevas_filas = Integer.parseInt(FieldFilas.getText());
+        int nuevas_columnas = Integer.parseInt(FieldColumnas.getText());
+        if (nuevas_filas >= CASILLAS_MIN && nuevas_filas <= CASILLAS_MAX) {
+            if (nuevas_columnas >= CASILLAS_MIN && nuevas_columnas <= CASILLAS_MAX){
+                this.filas = nuevas_filas;
+                this.columnas = nuevas_columnas;
+                inicializarGrid();
+            }
+        }
         tableroGridPane.requestFocus();
     }
 
     @FXML
     private void comandoA() {
-        NivelActual.setText("A pulsada");
+        TextNivelActual.setText("A pulsada");
     }
 
     @FXML
     private void comandoS() {
-        NivelActual.setText("S pulsada");
+        TextNivelActual.setText("S pulsada");
     }
 
     @FXML
     private void comandoD() {
-        NivelActual.setText("D pulsada");
+        TextNivelActual.setText("D pulsada");
     }
 
     @FXML
     private void comandoW() {
-        NivelActual.setText("W pulsada");
+        TextNivelActual.setText("W pulsada");
     }
 
     @FXML
     private void comandoQ() {
-        NivelActual.setText("Q pulsada");
+        TextNivelActual.setText("Q pulsada");
     }
 
     @FXML
     private void comandoE() {
-        NivelActual.setText("E pulsada");
+        TextNivelActual.setText("E pulsada");
     }
 
     @FXML
     private void comandoZ() {
-        NivelActual.setText("Z pulsada");
+        TextNivelActual.setText("Z pulsada");
     }
 
     @FXML
     private void comandoC() {
-        NivelActual.setText("C pulsada");
+        TextNivelActual.setText("C pulsada");
     }
 
     @FXML
     private void comandoX() {
-        NivelActual.setText("X pulsada");
+        TextNivelActual.setText("X pulsada");
     }
 
     @FXML
     private void comandoT() {
-        NivelActual.setText("T pulsada");
+        TextNivelActual.setText("T pulsada");
     }
 
     @FXML
     private void comandoG() {
-        NivelActual.setText("G pulsada");
+        TextNivelActual.setText("G pulsada");
     }
 }

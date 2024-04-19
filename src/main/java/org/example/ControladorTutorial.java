@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
 public class ControladorTutorial {
-    public Button Menu;
+    public Button BotonMenu;
 
     @FXML
     private void switchToMenu() throws IOException {
