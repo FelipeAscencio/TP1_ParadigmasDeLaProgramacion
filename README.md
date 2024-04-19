@@ -15,14 +15,14 @@
 # Divisiones
 
 ## Juli
-Realizar la implementación de la parte lógica.
+Realizar la implementación de la parte lógica en la interfaz.
 
 ## Feli
-Ver como utilizar los sprites brindados por la cátedra.
+Hacer Readme.
 
-Ver como es la implementación de un Chess para copiar el sistema de las casillas.
+Investigar lo del mouse.
 
-Hacer e implementar todo lo necesario de los 5 mapas.
+Investigar lo de las animaciones de los robots y el pj.
 
 ### Botones a desarrollar
 
