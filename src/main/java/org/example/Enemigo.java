@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.List;
+
 public abstract class Enemigo {
     private int filaActual;
     private int columnaActual;
@@ -23,12 +25,17 @@ public abstract class Enemigo {
         columnaActual=col;
     }
 
+    public int calcularDireccion(int actual, int objetivo) {
+        int diferencia = objetivo - actual;
+        if (Math.abs(diferencia) >= 1) {
+            return diferencia > 0 ? 1 : -1;
+        }
+        return 0;
+    }
     public abstract void mover(int filaJugador, int columnaJugador);
 
     public boolean colisionJugador(int filaJugador, int columnaJugador){
         return (filaJugador == getFilaActual() && columnaJugador == getColumnaActual());
     }
-
-    //public abstract boolean colisionCeldaIncendiada(boolean[][] celdasIncendiadas);
 
 }

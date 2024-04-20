@@ -13,15 +13,9 @@ public class Robot2 extends Enemigo {
         int nuevaFila=getFilaActual()+dirFilaMover;
         int nuevaColumna=getColumnaActual()+dirColumnaMover;
 
+        nuevaFila+=calcularDireccion(nuevaFila,filaJugador);
+        nuevaColumna+=calcularDireccion(nuevaColumna,columnaJugador);
         setColumnaActual(nuevaColumna);
         setFilaActual(nuevaFila);
-    }
-
-    private int calcularDireccion(int actual, int objetivo) {
-        int diferencia = objetivo - actual;
-        if (Math.abs(diferencia) > 1) {
-            return diferencia > 0 ? 2 : -2;
-        }
-        return 0;
     }
 }

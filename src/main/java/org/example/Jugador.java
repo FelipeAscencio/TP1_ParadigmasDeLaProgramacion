@@ -30,6 +30,10 @@ public class Jugador {
         return usosTeletransportacion;
     }
 
+    public void setUsosTeletransportacion(int usosteletransporte){
+        usosTeletransportacion=usosteletransporte;
+    }
+
     public void mover(int filaNueva, int columnaNueva){
         this.filaActual=filaNueva;
         this.columnaActual=columnaNueva;

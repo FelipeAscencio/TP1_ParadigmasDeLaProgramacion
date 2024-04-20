@@ -2,8 +2,13 @@ package org.example;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.ResourceBundle;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.ImageCursor;
@@ -68,22 +73,6 @@ public class ControladorMapa implements Initializable {
         }
     }
 
-    private void actualizarGrid(){
-        for (int fila=0;fila<filas;fila++){
-            for (int col=0; col<columnas;col++){
-                Object elemento=juego.getTablero().getElemento(fila,col);
-                StackPane celda = (StackPane) obtenerCeldaEnPosicion(tableroGridPane, fila, col);
-                if (elemento!=null){
-                    Image nuevaImagen=obtenerImagenElemento(elemento);
-                    ImageView spriteView = new ImageView(nuevaImagen);
-                    celda.getChildren().add(spriteView);
-                }
-                else {
-                    celda.getChildren().clear();
-                }
-            }
-        }
-    }
 
     private void inicializarKeys(){
         tableroGridPane.setOnKeyReleased(event -> {
@@ -148,15 +137,6 @@ public class ControladorMapa implements Initializable {
         int numSprites = CANTIDAD_SPRITES;
 
         sprites = separarSprites(spriteStrip, spriteWidth, spriteHeight, numSprites);
-    }
-
-    private void agregarSpriteEnCelda(int fila, int columna, Image sprite) {
-        StackPane celda = (StackPane) tableroGridPane.getChildren().get(calcularIndiceNodo(tableroGridPane, fila, columna));
-
-        celda.getChildren().clear();
-
-        ImageView spriteView = new ImageView(sprite);
-        celda.getChildren().add(spriteView);
     }
 
     private Image obtenerImagenElemento(Object elemento) {
@@ -250,19 +230,6 @@ public class ControladorMapa implements Initializable {
         }
     }
 
-    private void actualizarIconoEnPosicion(int fila, int columna, String rutaIcono) {
-        // Obtener el StackPane en la posición especificada
-        StackPane stackPane = (StackPane) obtenerCeldaEnPosicion(tableroGridPane,fila, columna);
-        if (stackPane != null) {
-
-            // Crear el ImageView con el nuevo icono
-            ImageView nuevoIcono = new ImageView(rutaIcono);
-
-            // Agregar el nuevo icono al StackPane
-            stackPane.getChildren().add(nuevoIcono);
-        }
-    }
-
     @FXML
     private void switchToMenu() throws IOException {
         App.setRoot("menu");
@@ -277,12 +244,16 @@ public class ControladorMapa implements Initializable {
     private void teletransporteSeguro() throws IOException {
         TextNivelActual.setText("TP Safe");
         tableroGridPane.requestFocus();
+        juego.jugadorteletransporteseguro();
+        inicializarGrid();
     }
 
     @FXML
     private void teletransporteAleatorio() throws IOException {
         TextNivelActual.setText("TP Rand");
         tableroGridPane.requestFocus();
+        juego.jugadorteletransportacionrandom();
+        inicializarGrid();
     }
 
     @FXML
@@ -299,6 +270,7 @@ public class ControladorMapa implements Initializable {
             if (nuevas_columnas >= CASILLAS_MIN && nuevas_columnas <= CASILLAS_MAX){
                 this.filas = nuevas_filas;
                 this.columnas = nuevas_columnas;
+                juego.reinicioCambioMapa(filas,columnas);
                 inicializarGrid();
             }
         }
@@ -309,14 +281,14 @@ public class ControladorMapa implements Initializable {
     private void comandoA() {
         TextNivelActual.setText("A pulsada");
         juego.moverJugadorenTablero(Direccion.IZQUIERDA);
-        actualizarGrid();
+        inicializarGrid();
     }
 
     @FXML
     private void comandoS() {
         TextNivelActual.setText("S pulsada");
         juego.moverJugadorenTablero(Direccion.ABAJO);
-        actualizarGrid();
+        inicializarGrid();
 
     }
 
@@ -324,50 +296,62 @@ public class ControladorMapa implements Initializable {
     private void comandoD() {
         TextNivelActual.setText("D pulsada");
         juego.moverJugadorenTablero(Direccion.DERECHA);
+        inicializarGrid();
     }
 
     @FXML
     private void comandoW() {
         TextNivelActual.setText("W pulsada");
         juego.moverJugadorenTablero(Direccion.ARRIBA);
+        inicializarGrid();
     }
 
     @FXML
     private void comandoQ() {
         TextNivelActual.setText("Q pulsada");
         juego.moverJugadorenTablero(Direccion.DIAGONAL_ARRIBA_IZQUIERDA);
+        inicializarGrid();
     }
 
     @FXML
     private void comandoE() {
         TextNivelActual.setText("E pulsada");
         juego.moverJugadorenTablero(Direccion.DIAGONAL_ARRIBA_DERECHA);
+        inicializarGrid();
     }
 
     @FXML
     private void comandoZ() {
         TextNivelActual.setText("Z pulsada");
         juego.moverJugadorenTablero(Direccion.DIAGONAL_ABAJO_IZQUIERDA);
+        inicializarGrid();
     }
 
     @FXML
     private void comandoC() {
         TextNivelActual.setText("C pulsada");
         juego.moverJugadorenTablero(Direccion.DIAGONAL_ABAJO_DERECHA);
+        inicializarGrid();
     }
 
     @FXML
     private void comandoX() {
         TextNivelActual.setText("X pulsada");
+        juego.moverEnemigos();
+        inicializarGrid();
     }
 
     @FXML
     private void comandoT() {
         TextNivelActual.setText("T pulsada");
+        juego.jugadorteletransportacionrandom();
+        inicializarGrid();
     }
 
     @FXML
     private void comandoG() {
         TextNivelActual.setText("G pulsada");
+        juego.jugadorteletransporteseguro();
+        inicializarGrid();
     }
 }
