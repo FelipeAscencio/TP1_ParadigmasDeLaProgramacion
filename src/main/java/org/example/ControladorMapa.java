@@ -8,7 +8,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.ImageCursor;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -51,6 +50,7 @@ public class ControladorMapa implements Initializable {
     private static int columnas;
     private WritableImage[] sprites;
     private Juego juego;
+    private boolean game_over;
 
     public ControladorMapa() {
         this.filas = CASILLAS_DEFAULT;
@@ -67,20 +67,17 @@ public class ControladorMapa implements Initializable {
                 celda.setStyle("-fx-background-color: " + ((fila + columna) % 2 == 0 ? "white" : "lightblue"));
                 tableroGridPane.add(celda, columna, fila);
 
-                // Crear ImageView para la imagen del elemento en la celda
                 ImageView imageView = new ImageView();
-                imageView.setPreserveRatio(true); // Mantener la relación de aspecto
-                imageView.setFitWidth(TAMANIO_CELDA); // Ajustar ancho al tamaño de la celda
-                imageView.setFitHeight(TAMANIO_CELDA); // Ajustar alto al tamaño de la celda
+                imageView.setPreserveRatio(true);
+                imageView.setFitWidth(TAMANIO_CELDA);
+                imageView.setFitHeight(TAMANIO_CELDA);
 
-                // Obtener el elemento en la posición actual y establecer la imagen correspondiente
                 Object elemento = juego.getTablero().getElemento(fila, columna);
                 if (elemento != null) {
                     Image nuevaImagen = obtenerImagenElemento(elemento);
                     imageView.setImage(nuevaImagen);
                 }
 
-                // Agregar el ImageView a la celda
                 celda.getChildren().add(imageView);
             }
         }
@@ -96,9 +93,18 @@ public class ControladorMapa implements Initializable {
         TextTPRestantes.setText("Restantes: " + seguros_restantes);
     }
 
+    private void indicarFinJuego(){
+        TextPuntaje.setText("GAME OVER");
+        TextNivelActual.setText("Pulse reiniciar");
+    }
+
     private void actualizarTurno(){
         actualizarEstado();
         inicializarGrid();
+        game_over = juego.getEstado();
+        if (game_over){
+            indicarFinJuego();
+        }
     }
 
     private void inicializarKeys(){
@@ -263,6 +269,7 @@ public class ControladorMapa implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         juego=new Juego(filas,columnas);
+        game_over = false;
 
         inicializarSprites();
         actualizarTurno();
@@ -287,109 +294,139 @@ public class ControladorMapa implements Initializable {
 
     @FXML
     private void cambiarMapa() throws IOException {
-        int nuevas_filas = Integer.parseInt(FieldFilas.getText());
-        int nuevas_columnas = Integer.parseInt(FieldColumnas.getText());
-        if (nuevas_filas >= CASILLAS_MIN && nuevas_filas <= CASILLAS_MAX) {
-            if (nuevas_columnas >= CASILLAS_MIN && nuevas_columnas <= CASILLAS_MAX){
-                this.filas = nuevas_filas;
-                this.columnas = nuevas_columnas;
-                juego.reinicioCambioMapa(filas,columnas);
-                actualizarTurno();
+        if (!game_over){
+            int nuevas_filas = Integer.parseInt(FieldFilas.getText());
+            int nuevas_columnas = Integer.parseInt(FieldColumnas.getText());
+            if (nuevas_filas >= CASILLAS_MIN && nuevas_filas <= CASILLAS_MAX) {
+                if (nuevas_columnas >= CASILLAS_MIN && nuevas_columnas <= CASILLAS_MAX){
+                    this.filas = nuevas_filas;
+                    this.columnas = nuevas_columnas;
+                    juego.reinicioCambioMapa(filas,columnas);
+                    actualizarTurno();
+                }
             }
+            tableroGridPane.requestFocus();
         }
-        tableroGridPane.requestFocus();
     }
 
     @FXML
     private void teletransporteSeguro() throws IOException {
-        comandoG();
-        tableroGridPane.requestFocus();
+        if (!game_over){
+            comandoG();
+            tableroGridPane.requestFocus();
+        }
     }
 
     @FXML
     private void teletransporteAleatorio() throws IOException {
-        comandoT();
-        tableroGridPane.requestFocus();
+        if (!game_over){
+            comandoT();
+            tableroGridPane.requestFocus();
+        }
     }
 
     @FXML
     private void noMoverse() throws IOException {
-        comandoX();
-        tableroGridPane.requestFocus();
+        if (!game_over){
+            comandoX();
+            tableroGridPane.requestFocus();
+        }
     }
 
     @FXML
     private void comandoA() {
-        juego.moverJugadorenTablero(Direccion.IZQUIERDA);
-        actualizarTurno();
+        if (!game_over){
+            juego.moverJugadorenTablero(Direccion.IZQUIERDA);
+            actualizarTurno();
+        }
     }
 
     @FXML
     private void comandoS() {
-        juego.moverJugadorenTablero(Direccion.ABAJO);
-        actualizarTurno();
+        if (!game_over){
+            juego.moverJugadorenTablero(Direccion.ABAJO);
+            actualizarTurno();
+        }
     }
 
     @FXML
     private void comandoD() {
-        juego.moverJugadorenTablero(Direccion.DERECHA);
-        actualizarTurno();
+        if (!game_over){
+            juego.moverJugadorenTablero(Direccion.DERECHA);
+            actualizarTurno();
+        }
     }
 
     @FXML
     private void comandoW() {
-        juego.moverJugadorenTablero(Direccion.ARRIBA);
-        actualizarTurno();
+        if (!game_over){
+            juego.moverJugadorenTablero(Direccion.ARRIBA);
+            actualizarTurno();
+        }
     }
 
     @FXML
     private void comandoQ() {
-        juego.moverJugadorenTablero(Direccion.DIAGONAL_ARRIBA_IZQUIERDA);
-        actualizarTurno();
+        if (!game_over){
+            juego.moverJugadorenTablero(Direccion.DIAGONAL_ARRIBA_IZQUIERDA);
+            actualizarTurno();
+        }
     }
 
     @FXML
     private void comandoE() {
-        juego.moverJugadorenTablero(Direccion.DIAGONAL_ARRIBA_DERECHA);
-        actualizarTurno();
+        if (!game_over){
+            juego.moverJugadorenTablero(Direccion.DIAGONAL_ARRIBA_DERECHA);
+            actualizarTurno();
+        }
     }
 
     @FXML
     private void comandoZ() {
-        juego.moverJugadorenTablero(Direccion.DIAGONAL_ABAJO_IZQUIERDA);
-        actualizarTurno();
+        if (!game_over){
+            juego.moverJugadorenTablero(Direccion.DIAGONAL_ABAJO_IZQUIERDA);
+            actualizarTurno();
+        }
     }
 
     @FXML
     private void comandoC() {
-        juego.moverJugadorenTablero(Direccion.DIAGONAL_ABAJO_DERECHA);
-        actualizarTurno();
+        if (!game_over){
+            juego.moverJugadorenTablero(Direccion.DIAGONAL_ABAJO_DERECHA);
+            actualizarTurno();
+        }
     }
 
     @FXML
     private void comandoX() {
-        juego.moverEnemigos();
-        actualizarTurno();
+        if (!game_over){
+            juego.moverEnemigos();
+            actualizarTurno();
+        }
     }
 
     @FXML
     private void comandoG() {
-        int nueva_fila = Integer.parseInt(FieldTPFila.getText());
-        int nueva_columna = Integer.parseInt(FieldTPColumna.getText());
-        if (nueva_fila >= 0 && nueva_fila < this.filas) {
-            if (nueva_columna >= 0 && nueva_columna < this.columnas){
-                juego.jugadorTeletransportacion(nueva_fila, nueva_columna);
-                actualizarTurno();
+        if (!game_over){
+            int nueva_fila = Integer.parseInt(FieldTPFila.getText());
+            int nueva_columna = Integer.parseInt(FieldTPColumna.getText());
+            if (nueva_fila >= 0 && nueva_fila < this.filas) {
+                if (nueva_columna >= 0 && nueva_columna < this.columnas){
+                    //juego.jugadorTeletransportacion(nueva_fila, nueva_columna);
+                    actualizarTurno();
+                }
             }
         }
     }
 
     @FXML
     private void comandoT() {
-        Random random = new Random();
-        int nueva_fila = random.nextInt(this.filas);
-        int nueva_columna = random.nextInt(this.columnas);
-        juego.jugadorTeletransportacion(nueva_fila, nueva_columna);
-        actualizarTurno();
+        if (!game_over){
+            Random random = new Random();
+            int nueva_fila = random.nextInt(this.filas);
+            int nueva_columna = random.nextInt(this.columnas);
+            //juego.jugadorTeletransportacion(nueva_fila, nueva_columna);
+            actualizarTurno();
+        }
     }
 }

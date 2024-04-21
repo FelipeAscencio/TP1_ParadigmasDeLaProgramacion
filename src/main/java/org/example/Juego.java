@@ -10,6 +10,7 @@ public class Juego {
     private int CANTIDAD_INICIAL_ENEMIGOS=5;
     private int nivel;
     private int puntos;
+    private boolean game_over;
 
     public Juego(int filas, int columnas){
         tablero=new Tablero(filas,columnas);
@@ -19,6 +20,7 @@ public class Juego {
         generarEnemigos(CANTIDAD_INICIAL_ENEMIGOS);
         nivel=1;
         puntos=0;
+        game_over = false;
     }
 
 
@@ -116,7 +118,6 @@ public class Juego {
                 continue;
             }
             if (enemigo.colisionJugador(jugador.getFilaActual(),jugador.getColumnaActual())){
-                reiniciarJuego(1);
                 return;
             }
             tablero.agregarElemento(enemigo,enemigo.getFilaActual(),enemigo.getColumnaActual());
@@ -138,7 +139,7 @@ public class Juego {
             }
         }
         if (reiniciar || tablero.hayExplosion(jugador.getFilaActual(), jugador.getColumnaActual())) {
-            reiniciarJuego(1);
+            game_over = true;
             return true;
         }
         return false;
@@ -205,5 +206,9 @@ public class Juego {
     }
     public int getNivel(){
         return nivel;
+    }
+
+    public boolean getEstado(){
+        return game_over;
     }
 }
