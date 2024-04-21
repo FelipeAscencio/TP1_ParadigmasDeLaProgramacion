@@ -200,5 +200,10 @@ public class Juego {
     public Jugador getJugador(){
         return jugador;
     }
-
+    public int getPuntos(){
+        return puntos;
+    }
+    public int getNivel(){
+        return nivel;
+    }
 }
