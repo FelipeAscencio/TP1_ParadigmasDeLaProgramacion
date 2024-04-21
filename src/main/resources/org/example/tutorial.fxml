@@ -12,7 +12,8 @@
         <Label text="¡Bienvenido al tutorial!" textFill="#c62727">
          <font>
             <Font name="Arial" size="36.0" />
-         </font></Label>
+         </font>
+        </Label>
       <Text fill="#5c0a0a" strokeType="OUTSIDE" strokeWidth="0.0" text="Robots es un juego por turnos en el que debes escapar de los robots enemigos.">
          <font>
             <Font name="Arial Bold" size="14.0" />
@@ -80,7 +81,8 @@
         <Button fx:id="BotonMenu" onAction="#switchToMenu" text="Volver al menú" textFill="#3208ff">
          <font>
             <Font name="Arial" size="12.0" />
-         </font></Button>
+         </font>
+        </Button>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" />
     </children>
     <padding>

@@ -32,7 +32,8 @@
                   </Stop>
                </stops>
             </LinearGradient>
-         </textFill></Label>
+         </textFill>
+        </Label>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="¡Bienvenido a la mejor implementación de &quot;ROBOTS&quot; de todo Paradigmas de la programación!">
          <font>
             <Font name="Arial Bold" size="12.0" />
@@ -57,7 +58,8 @@
         <Button fx:id="BotonTutorial" onAction="#switchToTutorial" text="Ir al tutorial" textFill="#2200ff">
          <font>
             <Font name="Arial" size="12.0" />
-         </font></Button>
+         </font>
+        </Button>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Pulsa 'JUGAR' para empezar tu partida:">
          <fill>
             <RadialGradient centerX="0.5165745856353591" centerY="0.5379146919431279" focusDistance="-0.02298850574712641" radius="0.7126436781609196">
@@ -77,11 +79,13 @@
          </fill>
          <font>
             <Font name="Arial" size="16.0" />
-         </font></Text>
+         </font>
+      </Text>
         <Button fx:id="BotonMapa" onAction="#switchToMapa" text="JUGAR" textFill="#3208ff">
          <font>
             <Font name="Arial" size="12.0" />
-         </font></Button>
+         </font>
+        </Button>
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Si quieres nuevos retos, recuerda que puedes modificar el tamaño del mapa a tu gusto.">
             <fill>
                 <RadialGradient centerX="0.5165745856353591" centerY="0.5379146919431279" focusDistance="-0.02298850574712641" radius="0.7126436781609196">
@@ -101,8 +105,9 @@
             </fill>
             <font>
                 <Font name="Arial" size="12.0" />
-            </font></Text>
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podrás elegir cualquier valor de filas y columnas entre '10 x 10' y '30 x 30', ¡sé creativo!">
+            </font>
+        </Text>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podrás elegir cualquier valor de filas y columnas entre '5 x 5' y '19 x 19' (filas y columnas pueden ser distintas), ¡sé creativo!">
             <fill>
                 <RadialGradient centerX="0.5165745856353591" centerY="0.5379146919431279" focusDistance="-0.02298850574712641" radius="0.7126436781609196">
                     <stops>
@@ -121,7 +126,8 @@
             </fill>
             <font>
                 <Font name="Arial" size="12.0" />
-            </font></Text>
+            </font>
+        </Text>
     </children>
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
