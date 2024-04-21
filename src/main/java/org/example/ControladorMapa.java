@@ -2,6 +2,7 @@ package org.example;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -32,6 +33,8 @@ public class ControladorMapa implements Initializable {
     public Label TextPuntaje;
     public TextField FieldFilas;
     public TextField FieldColumnas;
+    public TextField FieldTPFila;
+    public TextField FieldTPColumna;
     private static final int CASILLAS_DEFAULT = 15;
     private static final int CASILLAS_MIN = 5;
     private static final int CASILLAS_MAX = 19;
@@ -371,13 +374,22 @@ public class ControladorMapa implements Initializable {
 
     @FXML
     private void comandoG() {
-        juego.jugadorteletransporteseguro();
-        actualizarTurno();
+        int nueva_fila = Integer.parseInt(FieldTPFila.getText());
+        int nueva_columna = Integer.parseInt(FieldTPColumna.getText());
+        if (nueva_fila >= 0 && nueva_fila < this.filas) {
+            if (nueva_columna >= 0 && nueva_columna < this.columnas){
+                juego.jugadorTeletransportacion(nueva_fila, nueva_columna);
+                actualizarTurno();
+            }
+        }
     }
 
     @FXML
     private void comandoT() {
-        juego.jugadorteletransportacionrandom();
+        Random random = new Random();
+        int nueva_fila = random.nextInt(this.filas);
+        int nueva_columna = random.nextInt(this.columnas);
+        juego.jugadorTeletransportacion(nueva_fila, nueva_columna);
         actualizarTurno();
     }
 }
