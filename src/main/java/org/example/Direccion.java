@@ -9,7 +9,6 @@ public enum Direccion {
     DIAGONAL_ARRIBA_DERECHA(-1, 1),
     DIAGONAL_ABAJO_IZQUIERDA(1, -1),
     DIAGONAL_ABAJO_DERECHA(1,1);
-
     private final int cambioFila;
     private final int cambioColumna;
 

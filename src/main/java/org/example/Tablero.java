@@ -3,7 +3,6 @@ package org.example;
 public class Tablero {
     private int filas;
     private int columnas;
-
     private Object[][] matriz;
 
     public Tablero(int filas, int columnas) {
@@ -46,15 +45,7 @@ public class Tablero {
         return columnas;
     }
 
-    public Object[][] getMatriz() {
-        return matriz;
-    }
-
     public Object getElemento(int fila, int columna) {
         return matriz[fila][columna];
-    }
-
-    public void setElemento(int fila, int columna, Object elemento) {
-        matriz[fila][columna] = elemento;
     }
 }

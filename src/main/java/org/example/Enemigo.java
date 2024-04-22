@@ -1,7 +1,5 @@
 package org.example;
 
-import java.util.List;
-
 public abstract class Enemigo {
     private int filaActual;
     private int columnaActual;
@@ -10,6 +8,7 @@ public abstract class Enemigo {
         this.filaActual = filaInicial;
         this.columnaActual = columnaInicial;
     }
+
     public int getFilaActual() {
         return filaActual;
     }
@@ -21,6 +20,7 @@ public abstract class Enemigo {
     public void setFilaActual(int fil){
         filaActual=fil;
     }
+
     public void setColumnaActual(int col){
         columnaActual=col;
     }
@@ -32,10 +32,10 @@ public abstract class Enemigo {
         }
         return 0;
     }
+
     public abstract void mover(int filaJugador, int columnaJugador);
 
     public boolean colisionJugador(int filaJugador, int columnaJugador){
         return (filaJugador == getFilaActual() && columnaJugador == getColumnaActual());
     }
-
 }

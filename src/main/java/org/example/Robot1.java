@@ -16,11 +16,5 @@ public class Robot1 extends Enemigo{
         setColumnaActual(nuevaColumna);
         setFilaActual(nuevaFila);
     }
-
-    public boolean colisionCeldaIncendiada(boolean[][] celdasIncendiadas) {
-        return celdasIncendiadas[getFilaActual()][getColumnaActual()];
-    }
-
-    // Otros métodos específicos de Robot1, si es necesario
 }
 

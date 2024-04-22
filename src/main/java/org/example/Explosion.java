@@ -10,5 +10,4 @@ public class Explosion extends Enemigo {
     public void mover(int filajugador, int columnajugador) {
         return;
     }
-
 }
