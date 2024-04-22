@@ -40,24 +40,13 @@ public class ControladorMapa implements Initializable {
     private static final int TAMANIO_CELDA = 32;
     private static final int TAMANIO_SPRITE = 32;
     private static final int CANTIDAD_SPRITES = 14;
-    private static final int IMG_PLAYER_1 = 0;
-    private static final int IMG_PLAYER_2 = 1;
-    private static final int IMG_PLAYER_3 = 2;
-    private static final int IMG_PLAYER_4 = 3;
-    private static final int IMG_PLAYER_5 = 4;
-    private static final int IMG_ROBOT1_1 = 5;
-    private static final int IMG_ROBOT1_2 = 6;
-    private static final int IMG_ROBOT1_3 = 7;
-    private static final int IMG_ROBOT1_4 = 8;
-    private static final int IMG_ROBOT2_1 = 9;
-    private static final int IMG_ROBOT2_2 = 10;
-    private static final int IMG_ROBOT2_3 = 11;
-    private static final int IMG_ROBOT2_4 = 12;
     private static final int PRIMERA_POSICION = 0;
     private static final int SEGUNDA_POSICION = 1;
     private static final int TERCERA_POSICION = 2;
     private static final int CUARTA_POSICION = 3;
     private static final int GAMEOVER_POSICION = 4;
+    private static final int POSICION_SPRITES_ROBOT1 = 5; //Se usa para reutilizar constantes indicando comiendo de sprites del robot1.
+    private static final int POSICION_SPRITES_ROBOT2 = 9; //Se usa para reutilizar constantes indicando comiendo de sprites del robot2.
     private static final int IMG_EXPLOSION = 13;
     private static final double CORRECCION_X = 2; //Se usa para corregir la relaciòn de coordenadas X entre el mouse y el jugador.
     private static final double CORRECION_Y = 1.05; //Se usa para corregir la relaciòn de coordenadas Y entre el mouse y el jugador.
@@ -138,51 +127,51 @@ public class ControladorMapa implements Initializable {
 
     private Image obtenerPrimerSprite(Object elemento){
         if (elemento instanceof Jugador){
-            return sprites[IMG_PLAYER_1];
+            return sprites[PRIMERA_POSICION];
         } else if (elemento instanceof Robot1){
-            return sprites[IMG_ROBOT1_1];
+            return sprites[PRIMERA_POSICION + POSICION_SPRITES_ROBOT1];
         } else if (elemento instanceof Robot2){
-            return sprites[IMG_ROBOT2_1];
+            return sprites[PRIMERA_POSICION + POSICION_SPRITES_ROBOT2];
         }
         return null;
     }
 
     private Image obtenerSegundoSprite(Object elemento){
         if (elemento instanceof Jugador){
-            return sprites[IMG_PLAYER_2];
+            return sprites[SEGUNDA_POSICION];
         } else if (elemento instanceof Robot1){
-            return sprites[IMG_ROBOT1_2];
+            return sprites[SEGUNDA_POSICION + POSICION_SPRITES_ROBOT1];
         } else if (elemento instanceof Robot2){
-            return sprites[IMG_ROBOT2_2];
+            return sprites[SEGUNDA_POSICION + POSICION_SPRITES_ROBOT2];
         }
         return null;
     }
 
     private Image obtenerTercerSprite(Object elemento){
         if (elemento instanceof Jugador){
-            return sprites[IMG_PLAYER_3];
+            return sprites[TERCERA_POSICION];
         } else if (elemento instanceof Robot1){
-            return sprites[IMG_ROBOT1_3];
+            return sprites[TERCERA_POSICION + POSICION_SPRITES_ROBOT1];
         } else if (elemento instanceof Robot2){
-            return sprites[IMG_ROBOT2_3];
+            return sprites[TERCERA_POSICION + POSICION_SPRITES_ROBOT2];
         }
         return null;
     }
 
     private Image obtenerCuartoSprite(Object elemento){
         if (elemento instanceof Jugador){
-            return sprites[IMG_PLAYER_4];
+            return sprites[CUARTA_POSICION];
         } else if (elemento instanceof Robot1){
-            return sprites[IMG_ROBOT1_4];
+            return sprites[CUARTA_POSICION + POSICION_SPRITES_ROBOT1];
         } else if (elemento instanceof Robot2){
-            return sprites[IMG_ROBOT2_4];
+            return sprites[CUARTA_POSICION + POSICION_SPRITES_ROBOT2];
         }
         return null;
     }
 
     private Image obtenerGameOverSprite(Object elemento){
         if (elemento instanceof Jugador){
-            return sprites[IMG_PLAYER_5];
+            return sprites[GAMEOVER_POSICION];
         }
         return null;
     }
@@ -344,6 +333,7 @@ public class ControladorMapa implements Initializable {
     private void cargarMapa(){
         juego = new Juego(filas,columnas);
         game_over = false;
+        estado_sprites = 0;
 
         inicializarSprites();
         actualizarTurno();
