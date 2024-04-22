@@ -25,6 +25,11 @@ public class Tablero {
         return elemento instanceof Explosion;
     }
 
+    public boolean hayEnemigo(int fila, int col){
+        Object elemento=getElemento(fila,col);
+        return elemento instanceof Enemigo;
+    }
+
     public void eliminarElemento(int fila, int columna) {
         matriz[fila][columna] = null;
     }

@@ -412,7 +412,7 @@ public class ControladorMapa implements Initializable {
             int nueva_columna = Integer.parseInt(FieldTPColumna.getText());
             if (nueva_fila >= 0 && nueva_fila < this.filas) {
                 if (nueva_columna >= 0 && nueva_columna < this.columnas){
-                    //juego.jugadorTeletransportacion(nueva_fila, nueva_columna);
+                    juego.jugadorteletransportacion(nueva_fila, nueva_columna);
                     actualizarTurno();
                 }
             }
@@ -425,7 +425,7 @@ public class ControladorMapa implements Initializable {
             Random random = new Random();
             int nueva_fila = random.nextInt(this.filas);
             int nueva_columna = random.nextInt(this.columnas);
-            //juego.jugadorTeletransportacion(nueva_fila, nueva_columna);
+            juego.jugadorteletransportacion(nueva_fila, nueva_columna);
             actualizarTurno();
         }
     }
