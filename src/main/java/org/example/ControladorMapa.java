@@ -20,7 +20,7 @@ import javafx.scene.layout.*;
 
 public class ControladorMapa implements Initializable {
     @FXML
-    public GridPane tableroGridPane;
+    public GridPane TableroGridpane;
     public Button BotonMenu;
     public Button BotonReiniciar;
     public Button BotonTeletransporteSeguro;
@@ -44,8 +44,10 @@ public class ControladorMapa implements Initializable {
     private static final int IMG_ROBOT1 = 6;
     private static final int IMG_ROBOT2 = 10;
     private static final int IMG_EXPLOSION = 13;
-    private static final double CORRECCION_X = 2;
-    private static final double CORRECION_Y = 1.05;
+    private static final double CORRECCION_X = 2; //Se usa para corregir la relaciòn de coordenadas X entre el mouse y el jugador.
+    private static final double CORRECION_Y = 1.05; //Se usa para corregir la relaciòn de coordenadas Y entre el mouse y el jugador.
+    private static final int TAMANIO_CURSOR = 300;
+    private static final int USOS_MINIMOS = 1;
     private static int filas;
     private static int columnas;
     private WritableImage[] sprites;
@@ -53,19 +55,19 @@ public class ControladorMapa implements Initializable {
     private boolean game_over;
 
     public ControladorMapa() {
-        this.filas = CASILLAS_DEFAULT;
-        this.columnas = CASILLAS_DEFAULT;
+        filas = CASILLAS_DEFAULT;
+        columnas = CASILLAS_DEFAULT;
     }
 
     private void inicializarGrid() {
-        tableroGridPane.getChildren().clear();
+        TableroGridpane.getChildren().clear();
 
         for (int fila = 0; fila < filas; fila++) {
             for (int columna = 0; columna < columnas; columna++) {
                 StackPane celda = new StackPane();
                 celda.setPrefSize(TAMANIO_CELDA, TAMANIO_CELDA);
                 celda.setStyle("-fx-background-color: " + ((fila + columna) % 2 == 0 ? "white" : "lightblue"));
-                tableroGridPane.add(celda, columna, fila);
+                TableroGridpane.add(celda, columna, fila);
 
                 ImageView imageView = new ImageView();
                 imageView.setPreserveRatio(true);
@@ -86,7 +88,7 @@ public class ControladorMapa implements Initializable {
     private void actualizarEstado(){
         int puntos_actuales = juego.getPuntos();
         int nivel_actual = juego.getNivel();
-        int seguros_restantes = juego.getJugador().getUsosTeletransportacion();
+        int seguros_restantes = juego.getUsosTeletransportacion();
 
         TextPuntaje.setText("Puntos: " + puntos_actuales);
         TextNivelActual.setText("Nivel: " + nivel_actual);
@@ -94,8 +96,8 @@ public class ControladorMapa implements Initializable {
     }
 
     private void indicarFinJuego(){
-        TextPuntaje.setText("GAME OVER");
-        TextNivelActual.setText("Pulse reiniciar");
+        TextPuntaje.setText("Pulse 'Reiniciar'");
+        TextNivelActual.setText("GAME OVER");
     }
 
     private void actualizarTurno(){
@@ -108,7 +110,7 @@ public class ControladorMapa implements Initializable {
     }
 
     private void inicializarKeys(){
-        tableroGridPane.setOnKeyReleased(event -> {
+        TableroGridpane.setOnKeyReleased(event -> {
             switch (event.getCode()) {
                 case A:
                     comandoA();
@@ -149,15 +151,14 @@ public class ControladorMapa implements Initializable {
         });
     }
 
-    private WritableImage[] separarSprites(ImageView spriteStrip, int spriteWidth, int spriteHeight, int numSprites) {
-        WritableImage[] sprites = new WritableImage[numSprites];
-
+    private WritableImage[] separarSprites(ImageView spriteStrip) {
+        WritableImage[] sprites = new WritableImage[CANTIDAD_SPRITES];
         PixelReader pixelReader = spriteStrip.getImage().getPixelReader();
 
-        for (int i = 0; i < numSprites; i++) {
-            int startX = i * spriteWidth;
+        for (int i = 0; i < CANTIDAD_SPRITES; i++) {
+            int startX = i * TAMANIO_SPRITE;
             int startY = 0;
-            WritableImage spriteImage = new WritableImage(pixelReader, startX, startY, spriteWidth, spriteHeight);
+            WritableImage spriteImage = new WritableImage(pixelReader, startX, startY, TAMANIO_SPRITE, TAMANIO_SPRITE);
             sprites[i] = spriteImage;
         }
         return sprites;
@@ -165,11 +166,7 @@ public class ControladorMapa implements Initializable {
 
     private void inicializarSprites() {
         ImageView spriteStrip = new ImageView("file:doc/modelos.png");
-        int spriteWidth = TAMANIO_SPRITE;
-        int spriteHeight = TAMANIO_SPRITE;
-        int numSprites = CANTIDAD_SPRITES;
-
-        sprites = separarSprites(spriteStrip, spriteWidth, spriteHeight, numSprites);
+        sprites = separarSprites(spriteStrip);
     }
 
     private Image obtenerImagenElemento(Object elemento) {
@@ -228,7 +225,7 @@ public class ControladorMapa implements Initializable {
 
     public void detectarDireccionMouse(MouseEvent event){
         Direccion direccion = hallarDireccion(event);
-        double tamanioCursor = 300;
+        double tamanioCursor = TAMANIO_CURSOR;
         Image cursorArriba = new Image("file:doc/up.png", tamanioCursor, tamanioCursor, true, true);
         Image cursorAbajo = new Image("file:doc/down.png", tamanioCursor, tamanioCursor, true, true);
         Image cursorIzq = new Image("file:doc/left.png", tamanioCursor, tamanioCursor, true, true);
@@ -240,46 +237,50 @@ public class ControladorMapa implements Initializable {
 
         switch (direccion) {
             case ARRIBA:
-                tableroGridPane.setCursor(new ImageCursor(cursorArriba));
+                TableroGridpane.setCursor(new ImageCursor(cursorArriba));
                 break;
             case ABAJO:
-                tableroGridPane.setCursor(new ImageCursor(cursorAbajo));
+                TableroGridpane.setCursor(new ImageCursor(cursorAbajo));
                 break;
             case IZQUIERDA:
-                tableroGridPane.setCursor(new ImageCursor(cursorIzq));
+                TableroGridpane.setCursor(new ImageCursor(cursorIzq));
                 break;
             case DERECHA:
-                tableroGridPane.setCursor(new ImageCursor(cursorDer));
+                TableroGridpane.setCursor(new ImageCursor(cursorDer));
                 break;
             case DIAGONAL_ARRIBA_IZQUIERDA:
-                tableroGridPane.setCursor(new ImageCursor(cursorArrIzq));
+                TableroGridpane.setCursor(new ImageCursor(cursorArrIzq));
                 break;
             case DIAGONAL_ARRIBA_DERECHA:
-                tableroGridPane.setCursor(new ImageCursor(cursorArrDer));
+                TableroGridpane.setCursor(new ImageCursor(cursorArrDer));
                 break;
             case DIAGONAL_ABAJO_IZQUIERDA:
-                tableroGridPane.setCursor(new ImageCursor(cursorAbaIzq));
+                TableroGridpane.setCursor(new ImageCursor(cursorAbaIzq));
                 break;
             case DIAGONAL_ABAJO_DERECHA:
-                tableroGridPane.setCursor(new ImageCursor(cursorAbaDer));
+                TableroGridpane.setCursor(new ImageCursor(cursorAbaDer));
                 break;
         }
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        juego=new Juego(filas,columnas);
+    private void cargarMapa(){
+        juego = new Juego(filas,columnas);
         game_over = false;
 
         inicializarSprites();
         actualizarTurno();
         inicializarKeys();
-        tableroGridPane.setOnMouseMoved(this::detectarDireccionMouse);
-        tableroGridPane.setOnMouseClicked(this::detectarClicMouse);
+        TableroGridpane.setOnMouseMoved(this::detectarDireccionMouse);
+        TableroGridpane.setOnMouseClicked(this::detectarClicMouse);
 
         Platform.runLater(() -> {
-            tableroGridPane.requestFocus();
+            TableroGridpane.requestFocus();
         });
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        cargarMapa();
     }
 
     @FXML
@@ -288,52 +289,50 @@ public class ControladorMapa implements Initializable {
     }
 
     @FXML
-    private void reloadMapa() throws IOException {
-        App.setRoot("mapa");
+    private void reloadMapa(){
+        cargarMapa();
     }
 
     @FXML
-    private void cambiarMapa() throws IOException {
+    private void cambiarMapa(){
         if (!game_over){
             int nuevas_filas = Integer.parseInt(FieldFilas.getText());
             int nuevas_columnas = Integer.parseInt(FieldColumnas.getText());
             if (nuevas_filas >= CASILLAS_MIN && nuevas_filas <= CASILLAS_MAX) {
                 if (nuevas_columnas >= CASILLAS_MIN && nuevas_columnas <= CASILLAS_MAX){
-                    this.filas = nuevas_filas;
-                    this.columnas = nuevas_columnas;
-                    juego.reinicioCambioMapa(filas,columnas);
-                    actualizarTurno();
+                    filas = nuevas_filas;
+                    columnas = nuevas_columnas;
+                    cargarMapa();
                 }
             }
-            tableroGridPane.requestFocus();
+            TableroGridpane.requestFocus();
         }
     }
 
     @FXML
-    private void teletransporteSeguro() throws IOException {
+    private void teletransporteSeguro(){
         if (!game_over){
             comandoG();
-            tableroGridPane.requestFocus();
+            TableroGridpane.requestFocus();
         }
     }
 
     @FXML
-    private void teletransporteAleatorio() throws IOException {
+    private void teletransporteAleatorio(){
         if (!game_over){
             comandoT();
-            tableroGridPane.requestFocus();
+            TableroGridpane.requestFocus();
         }
     }
 
     @FXML
-    private void noMoverse() throws IOException {
+    private void noMoverse(){
         if (!game_over){
             comandoX();
-            tableroGridPane.requestFocus();
+            TableroGridpane.requestFocus();
         }
     }
 
-    @FXML
     private void comandoA() {
         if (!game_over){
             juego.moverJugadorenTablero(Direccion.IZQUIERDA);
@@ -341,7 +340,6 @@ public class ControladorMapa implements Initializable {
         }
     }
 
-    @FXML
     private void comandoS() {
         if (!game_over){
             juego.moverJugadorenTablero(Direccion.ABAJO);
@@ -349,7 +347,6 @@ public class ControladorMapa implements Initializable {
         }
     }
 
-    @FXML
     private void comandoD() {
         if (!game_over){
             juego.moverJugadorenTablero(Direccion.DERECHA);
@@ -357,7 +354,6 @@ public class ControladorMapa implements Initializable {
         }
     }
 
-    @FXML
     private void comandoW() {
         if (!game_over){
             juego.moverJugadorenTablero(Direccion.ARRIBA);
@@ -365,7 +361,6 @@ public class ControladorMapa implements Initializable {
         }
     }
 
-    @FXML
     private void comandoQ() {
         if (!game_over){
             juego.moverJugadorenTablero(Direccion.DIAGONAL_ARRIBA_IZQUIERDA);
@@ -373,7 +368,6 @@ public class ControladorMapa implements Initializable {
         }
     }
 
-    @FXML
     private void comandoE() {
         if (!game_over){
             juego.moverJugadorenTablero(Direccion.DIAGONAL_ARRIBA_DERECHA);
@@ -381,7 +375,6 @@ public class ControladorMapa implements Initializable {
         }
     }
 
-    @FXML
     private void comandoZ() {
         if (!game_over){
             juego.moverJugadorenTablero(Direccion.DIAGONAL_ABAJO_IZQUIERDA);
@@ -389,7 +382,6 @@ public class ControladorMapa implements Initializable {
         }
     }
 
-    @FXML
     private void comandoC() {
         if (!game_over){
             juego.moverJugadorenTablero(Direccion.DIAGONAL_ABAJO_DERECHA);
@@ -397,7 +389,6 @@ public class ControladorMapa implements Initializable {
         }
     }
 
-    @FXML
     private void comandoX() {
         if (!game_over){
             juego.moverEnemigos();
@@ -405,27 +396,30 @@ public class ControladorMapa implements Initializable {
         }
     }
 
-    @FXML
     private void comandoG() {
         if (!game_over){
-            int nueva_fila = Integer.parseInt(FieldTPFila.getText());
-            int nueva_columna = Integer.parseInt(FieldTPColumna.getText());
-            if (nueva_fila >= 0 && nueva_fila < this.filas) {
-                if (nueva_columna >= 0 && nueva_columna < this.columnas){
-                    juego.jugadorteletransportacion(nueva_fila, nueva_columna);
-                    actualizarTurno();
+            int turnos = juego.getUsosTeletransportacion();
+            if (turnos >= USOS_MINIMOS){
+                int nueva_fila = Integer.parseInt(FieldTPFila.getText());
+                int nueva_columna = Integer.parseInt(FieldTPColumna.getText());
+                if (nueva_fila >= 0 && nueva_fila < filas) {
+                    if (nueva_columna >= 0 && nueva_columna < columnas){
+                        juego.jugadorteletransportacion(nueva_fila, nueva_columna, true);
+                        juego.moverEnemigos();
+                        actualizarTurno();
+                    }
                 }
             }
         }
     }
 
-    @FXML
     private void comandoT() {
         if (!game_over){
             Random random = new Random();
-            int nueva_fila = random.nextInt(this.filas);
-            int nueva_columna = random.nextInt(this.columnas);
-            juego.jugadorteletransportacion(nueva_fila, nueva_columna);
+            int nueva_fila = random.nextInt(filas);
+            int nueva_columna = random.nextInt(columnas);
+            juego.jugadorteletransportacion(nueva_fila, nueva_columna, false);
+            juego.moverEnemigos();
             actualizarTurno();
         }
     }
