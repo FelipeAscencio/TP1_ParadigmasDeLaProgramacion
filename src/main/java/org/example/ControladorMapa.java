@@ -40,9 +40,24 @@ public class ControladorMapa implements Initializable {
     private static final int TAMANIO_CELDA = 32;
     private static final int TAMANIO_SPRITE = 32;
     private static final int CANTIDAD_SPRITES = 14;
-    private static final int IMG_PLAYER = 0;
-    private static final int IMG_ROBOT1 = 6;
-    private static final int IMG_ROBOT2 = 10;
+    private static final int IMG_PLAYER_1 = 0;
+    private static final int IMG_PLAYER_2 = 1;
+    private static final int IMG_PLAYER_3 = 2;
+    private static final int IMG_PLAYER_4 = 3;
+    private static final int IMG_PLAYER_5 = 4;
+    private static final int IMG_ROBOT1_1 = 5;
+    private static final int IMG_ROBOT1_2 = 6;
+    private static final int IMG_ROBOT1_3 = 7;
+    private static final int IMG_ROBOT1_4 = 8;
+    private static final int IMG_ROBOT2_1 = 9;
+    private static final int IMG_ROBOT2_2 = 10;
+    private static final int IMG_ROBOT2_3 = 11;
+    private static final int IMG_ROBOT2_4 = 12;
+    private static final int PRIMERA_POSICION = 0;
+    private static final int SEGUNDA_POSICION = 1;
+    private static final int TERCERA_POSICION = 2;
+    private static final int CUARTA_POSICION = 3;
+    private static final int GAMEOVER_POSICION = 4;
     private static final int IMG_EXPLOSION = 13;
     private static final double CORRECCION_X = 2; //Se usa para corregir la relaciòn de coordenadas X entre el mouse y el jugador.
     private static final double CORRECION_Y = 1.05; //Se usa para corregir la relaciòn de coordenadas Y entre el mouse y el jugador.
@@ -50,6 +65,7 @@ public class ControladorMapa implements Initializable {
     private static final int USOS_MINIMOS = 1;
     private static int filas;
     private static int columnas;
+    private int estado_sprites;
     private WritableImage[] sprites;
     private Juego juego;
     private boolean game_over;
@@ -57,56 +73,7 @@ public class ControladorMapa implements Initializable {
     public ControladorMapa() {
         filas = CASILLAS_DEFAULT;
         columnas = CASILLAS_DEFAULT;
-    }
-
-    private void inicializarGrid() {
-        TableroGridpane.getChildren().clear();
-
-        for (int fila = 0; fila < filas; fila++) {
-            for (int columna = 0; columna < columnas; columna++) {
-                StackPane celda = new StackPane();
-                celda.setPrefSize(TAMANIO_CELDA, TAMANIO_CELDA);
-                celda.setStyle("-fx-background-color: " + ((fila + columna) % 2 == 0 ? "white" : "lightblue"));
-                TableroGridpane.add(celda, columna, fila);
-
-                ImageView imageView = new ImageView();
-                imageView.setPreserveRatio(true);
-                imageView.setFitWidth(TAMANIO_CELDA);
-                imageView.setFitHeight(TAMANIO_CELDA);
-
-                Object elemento = juego.getTablero().getElemento(fila, columna);
-                if (elemento != null) {
-                    Image nuevaImagen = obtenerImagenElemento(elemento);
-                    imageView.setImage(nuevaImagen);
-                }
-
-                celda.getChildren().add(imageView);
-            }
-        }
-    }
-
-    private void actualizarEstado(){
-        int puntos_actuales = juego.getPuntos();
-        int nivel_actual = juego.getNivel();
-        int seguros_restantes = juego.getUsosTeletransportacion();
-
-        TextPuntaje.setText("Puntos: " + puntos_actuales);
-        TextNivelActual.setText("Nivel: " + nivel_actual);
-        TextTPRestantes.setText("Restantes: " + seguros_restantes);
-    }
-
-    private void indicarFinJuego(){
-        TextPuntaje.setText("Pulse 'Reiniciar'");
-        TextNivelActual.setText("GAME OVER");
-    }
-
-    private void actualizarTurno(){
-        actualizarEstado();
-        inicializarGrid();
-        game_over = juego.getEstado();
-        if (game_over){
-            indicarFinJuego();
-        }
+        estado_sprites = 0;
     }
 
     private void inicializarKeys(){
@@ -169,18 +136,129 @@ public class ControladorMapa implements Initializable {
         sprites = separarSprites(spriteStrip);
     }
 
+    private Image obtenerPrimerSprite(Object elemento){
+        if (elemento instanceof Jugador){
+            return sprites[IMG_PLAYER_1];
+        } else if (elemento instanceof Robot1){
+            return sprites[IMG_ROBOT1_1];
+        } else if (elemento instanceof Robot2){
+            return sprites[IMG_ROBOT2_1];
+        }
+        return null;
+    }
+
+    private Image obtenerSegundoSprite(Object elemento){
+        if (elemento instanceof Jugador){
+            return sprites[IMG_PLAYER_2];
+        } else if (elemento instanceof Robot1){
+            return sprites[IMG_ROBOT1_2];
+        } else if (elemento instanceof Robot2){
+            return sprites[IMG_ROBOT2_2];
+        }
+        return null;
+    }
+
+    private Image obtenerTercerSprite(Object elemento){
+        if (elemento instanceof Jugador){
+            return sprites[IMG_PLAYER_3];
+        } else if (elemento instanceof Robot1){
+            return sprites[IMG_ROBOT1_3];
+        } else if (elemento instanceof Robot2){
+            return sprites[IMG_ROBOT2_3];
+        }
+        return null;
+    }
+
+    private Image obtenerCuartoSprite(Object elemento){
+        if (elemento instanceof Jugador){
+            return sprites[IMG_PLAYER_4];
+        } else if (elemento instanceof Robot1){
+            return sprites[IMG_ROBOT1_4];
+        } else if (elemento instanceof Robot2){
+            return sprites[IMG_ROBOT2_4];
+        }
+        return null;
+    }
+
+    private Image obtenerGameOverSprite(Object elemento){
+        if (elemento instanceof Jugador){
+            return sprites[IMG_PLAYER_5];
+        }
+        return null;
+    }
+
     private Image obtenerImagenElemento(Object elemento) {
-        if (elemento instanceof Jugador) {
-            return sprites[IMG_PLAYER];
-        } else if (elemento instanceof Robot1) {
-            return sprites[IMG_ROBOT1];
-        } else if (elemento instanceof Robot2) {
-            return sprites[IMG_ROBOT2];
-        } else if (elemento instanceof Explosion){
+        if (elemento instanceof Explosion){
             return sprites[IMG_EXPLOSION];
+        } else if (estado_sprites == PRIMERA_POSICION){
+            return obtenerPrimerSprite(elemento);
+        } else if (estado_sprites == SEGUNDA_POSICION){
+            return obtenerSegundoSprite(elemento);
+        } else if (estado_sprites == TERCERA_POSICION){
+            return obtenerTercerSprite(elemento);
+        } else if (estado_sprites == CUARTA_POSICION){
+            return obtenerCuartoSprite(elemento);
+        } else if (estado_sprites == GAMEOVER_POSICION){
+            return obtenerGameOverSprite(elemento);
         }
 
         return null;
+    }
+
+    private void inicializarGrid() {
+        TableroGridpane.getChildren().clear();
+
+        for (int fila = 0; fila < filas; fila++) {
+            for (int columna = 0; columna < columnas; columna++) {
+                StackPane celda = new StackPane();
+                celda.setPrefSize(TAMANIO_CELDA, TAMANIO_CELDA);
+                celda.setStyle("-fx-background-color: " + ((fila + columna) % 2 == 0 ? "white" : "lightblue"));
+                TableroGridpane.add(celda, columna, fila);
+
+                ImageView imageView = new ImageView();
+                imageView.setPreserveRatio(true);
+                imageView.setFitWidth(TAMANIO_CELDA);
+                imageView.setFitHeight(TAMANIO_CELDA);
+                Object elemento = juego.getTablero().getElemento(fila, columna);
+                if (elemento != null) {
+                    Image nuevaImagen = obtenerImagenElemento(elemento);
+                    imageView.setImage(nuevaImagen);
+                }
+
+                celda.getChildren().add(imageView);
+            }
+        }
+        if (estado_sprites == CUARTA_POSICION){
+            estado_sprites = PRIMERA_POSICION;
+        } else {
+            estado_sprites++;
+        }
+    }
+
+    private void indicarFinJuego(){
+        TextPuntaje.setText("Pulse 'Reiniciar'");
+        TextNivelActual.setText("GAME OVER");
+        estado_sprites = GAMEOVER_POSICION;
+    }
+
+    private void actualizarEstado(){
+        int puntos_actuales = juego.getPuntos();
+        int nivel_actual = juego.getNivel();
+        int seguros_restantes = juego.getUsosTeletransportacion();
+
+        TextPuntaje.setText("Puntos: " + puntos_actuales);
+        TextNivelActual.setText("Nivel: " + nivel_actual);
+        TextTPRestantes.setText("Restantes: " + seguros_restantes);
+
+        game_over = juego.getEstado();
+        if (game_over){
+            indicarFinJuego();
+        }
+    }
+
+    private void actualizarTurno(){
+        actualizarEstado();
+        inicializarGrid();
     }
 
     public Direccion hallarDireccion(MouseEvent event){
