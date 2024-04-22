@@ -177,7 +177,9 @@ public class ControladorMapa implements Initializable {
     }
 
     private Image obtenerImagenElemento(Object elemento) {
-        if (elemento instanceof Explosion){
+        if (estado_sprites == GAMEOVER_POSICION){
+            return obtenerGameOverSprite(elemento);
+        } else if (elemento instanceof Explosion){
             return sprites[IMG_EXPLOSION];
         } else if (estado_sprites == PRIMERA_POSICION){
             return obtenerPrimerSprite(elemento);
@@ -187,8 +189,6 @@ public class ControladorMapa implements Initializable {
             return obtenerTercerSprite(elemento);
         } else if (estado_sprites == CUARTA_POSICION){
             return obtenerCuartoSprite(elemento);
-        } else if (estado_sprites == GAMEOVER_POSICION){
-            return obtenerGameOverSprite(elemento);
         }
 
         return null;

@@ -21,7 +21,10 @@ public class Tablero {
 
     public boolean hayExplosion(int fila, int col){
         Object elemento = getElemento(fila, col);
-        return elemento instanceof Explosion;
+        if (elemento instanceof Explosion){
+            return true;
+        }
+        return false;
     }
 
     public boolean hayEnemigo(int fila, int col){
