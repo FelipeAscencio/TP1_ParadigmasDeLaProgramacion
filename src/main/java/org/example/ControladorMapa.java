@@ -2,8 +2,13 @@ package org.example;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.Random;
 import java.util.ResourceBundle;
+
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -41,9 +46,6 @@ public class ControladorMapa implements Initializable {
     private static final int TAMANIO_SPRITE = 32;
     private static final int CANTIDAD_SPRITES = 14;
     private static final int PRIMERA_POSICION = 0;
-    private static final int SEGUNDA_POSICION = 1;
-    private static final int TERCERA_POSICION = 2;
-    private static final int CUARTA_POSICION = 3;
     private static final int GAMEOVER_POSICION = 4;
     private static final int POSICION_SPRITES_ROBOT1 = 5; //Se usa para reutilizar constantes indicando comiendo de sprites del robot1.
     private static final int POSICION_SPRITES_ROBOT2 = 9; //Se usa para reutilizar constantes indicando comiendo de sprites del robot2.
@@ -52,9 +54,10 @@ public class ControladorMapa implements Initializable {
     private static final double CORRECION_Y = 1.05; //Se usa para corregir la relaciòn de coordenadas Y entre el mouse y el jugador.
     private static final int TAMANIO_CURSOR = 300;
     private static final int USOS_MINIMOS = 1;
+    private int contadorAnimacion=0;
     private static int filas;
     private static int columnas;
-    private int estado_sprites;
+    private int estado_sprites=PRIMERA_POSICION;
     private WritableImage[] sprites;
     private Juego juego;
     private boolean game_over;
@@ -125,72 +128,11 @@ public class ControladorMapa implements Initializable {
         sprites = separarSprites(spriteStrip);
     }
 
-    private Image obtenerPrimerSprite(Object elemento){
-        if (elemento instanceof Jugador){
-            return sprites[PRIMERA_POSICION];
-        } else if (elemento instanceof Robot1){
-            return sprites[PRIMERA_POSICION + POSICION_SPRITES_ROBOT1];
-        } else if (elemento instanceof Robot2){
-            return sprites[PRIMERA_POSICION + POSICION_SPRITES_ROBOT2];
-        }
-        return null;
-    }
-
-    private Image obtenerSegundoSprite(Object elemento){
-        if (elemento instanceof Jugador){
-            return sprites[SEGUNDA_POSICION];
-        } else if (elemento instanceof Robot1){
-            return sprites[SEGUNDA_POSICION + POSICION_SPRITES_ROBOT1];
-        } else if (elemento instanceof Robot2){
-            return sprites[SEGUNDA_POSICION + POSICION_SPRITES_ROBOT2];
-        }
-        return null;
-    }
-
-    private Image obtenerTercerSprite(Object elemento){
-        if (elemento instanceof Jugador){
-            return sprites[TERCERA_POSICION];
-        } else if (elemento instanceof Robot1){
-            return sprites[TERCERA_POSICION + POSICION_SPRITES_ROBOT1];
-        } else if (elemento instanceof Robot2){
-            return sprites[TERCERA_POSICION + POSICION_SPRITES_ROBOT2];
-        }
-        return null;
-    }
-
-    private Image obtenerCuartoSprite(Object elemento){
-        if (elemento instanceof Jugador){
-            return sprites[CUARTA_POSICION];
-        } else if (elemento instanceof Robot1){
-            return sprites[CUARTA_POSICION + POSICION_SPRITES_ROBOT1];
-        } else if (elemento instanceof Robot2){
-            return sprites[CUARTA_POSICION + POSICION_SPRITES_ROBOT2];
-        }
-        return null;
-    }
 
     private Image obtenerGameOverSprite(Object elemento){
         if (elemento instanceof Jugador){
             return sprites[GAMEOVER_POSICION];
         }
-        return null;
-    }
-
-    private Image obtenerImagenElemento(Object elemento) {
-        if (estado_sprites == GAMEOVER_POSICION){
-            return obtenerGameOverSprite(elemento);
-        } else if (elemento instanceof Explosion){
-            return sprites[IMG_EXPLOSION];
-        } else if (estado_sprites == PRIMERA_POSICION){
-            return obtenerPrimerSprite(elemento);
-        } else if (estado_sprites == SEGUNDA_POSICION){
-            return obtenerSegundoSprite(elemento);
-        } else if (estado_sprites == TERCERA_POSICION){
-            return obtenerTercerSprite(elemento);
-        } else if (estado_sprites == CUARTA_POSICION){
-            return obtenerCuartoSprite(elemento);
-        }
-
         return null;
     }
 
@@ -210,18 +152,49 @@ public class ControladorMapa implements Initializable {
                 imageView.setFitHeight(TAMANIO_CELDA);
                 Object elemento = juego.getTablero().getElemento(fila, columna);
                 if (elemento != null) {
-                    Image nuevaImagen = obtenerImagenElemento(elemento);
+                    Image nuevaImagen = obtenerImagenobjeto(elemento);
                     imageView.setImage(nuevaImagen);
+                    animarElemento(imageView,elemento);
                 }
 
                 celda.getChildren().add(imageView);
             }
         }
-        if (estado_sprites == CUARTA_POSICION){
-            estado_sprites = PRIMERA_POSICION;
-        } else {
-            estado_sprites++;
+
+    }
+    private void animarElemento(ImageView imageView, Object elemento) {
+        if (game_over){
+            return;
         }
+        Timeline timeline = new Timeline(new KeyFrame(javafx.util.Duration.millis(400), e -> {
+            Image nuevaImagen = obtenerImagenobjeto(elemento);
+            imageView.setImage(nuevaImagen);
+            contadorAnimacion++; //
+            if (contadorAnimacion>CANTIDAD_SPRITES){
+                contadorAnimacion=0;
+            }
+        }));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
+    }
+
+    private Image obtenerImagenobjeto(Object elemento) {
+        if (estado_sprites==GAMEOVER_POSICION){
+            return obtenerGameOverSprite(elemento);
+        }
+        if (elemento instanceof Jugador) {
+            int indiceImagen = contadorAnimacion % 4;
+            return sprites[indiceImagen];
+        } else if (elemento instanceof Robot1) {
+            int indiceImagen = contadorAnimacion % 4; // Suponiendo que tienes 4 imágenes de Robot1 en tu sprite
+            return sprites[indiceImagen + POSICION_SPRITES_ROBOT1];
+        } else if (elemento instanceof Robot2) {
+            int indiceImagen = contadorAnimacion % 4; // Suponiendo que tienes 4 imágenes de Robot2 en tu sprite
+            return sprites[indiceImagen + POSICION_SPRITES_ROBOT2]; // Imágenes de Robot2 después de las imágenes de Robot1
+        } else if (elemento instanceof Explosion) {
+            return sprites[IMG_EXPLOSION]; // Imagen de explosión
+        }
+        return null;
     }
 
     private void indicarFinJuego(){
@@ -487,7 +460,6 @@ public class ControladorMapa implements Initializable {
             int nueva_fila = random.nextInt(filas);
             int nueva_columna = random.nextInt(columnas);
             juego.jugadorteletransportacion(nueva_fila, nueva_columna, false);
-            juego.moverEnemigos();
             actualizarTurno();
         }
     }

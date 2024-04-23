@@ -131,7 +131,6 @@ public class Juego {
                     enemigosAEliminar.add(enemigo1);
                     enemigosAEliminar.add(enemigo2);
                     puntos++;
-                    // Crear una explosión en la posición de la colisión
                     if (verificarColisionJugador(jugador.getFilaActual(), jugador.getColumnaActual())){
                         game_over = true;
                         return;
@@ -208,7 +207,10 @@ public class Juego {
         tablero.eliminarElemento(jugador.getFilaActual(), jugador.getColumnaActual());
         jugador.setFila(fila);
         jugador.setColumna(columna);
+        moverEnemigos();
+        if (verificarColisionJugador(jugador.getFilaActual(), jugador.getColumnaActual())){
+            game_over = true;
+        }
         tablero.agregarElemento(jugador,jugador.getFilaActual(), jugador.getColumnaActual());
-        verificarColisionJugador(jugador.getFilaActual(), jugador.getColumnaActual());
     }
 }
