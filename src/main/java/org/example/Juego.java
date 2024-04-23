@@ -85,12 +85,12 @@ public class Juego {
         }
         int nuevaFila = jugador.getFilaActual() + direccion.getCambioFila();
         int nuevaColumna = jugador.getColumnaActual() + direccion.getCambioColumna();
-        if (verificarColisionJugador(nuevaFila, nuevaColumna)){
-            game_over = true;
-            return;
-        }
         if (esMovimientoValido(nuevaFila, nuevaColumna)) {
             tablero.eliminarElemento(jugador.getFilaActual(), jugador.getColumnaActual());
+            if (verificarColisionJugador(nuevaFila, nuevaColumna)){
+                game_over = true;
+                return;
+            }
             jugador.mover(direccion);
             tablero.agregarElemento(jugador, nuevaFila, nuevaColumna);
         }
@@ -121,7 +121,7 @@ public class Juego {
         }
     }
 
-    public void verificarColisionEnemigos(List<Enemigo> enemigosAEliminar) {
+    private void verificarColisionEnemigos(List<Enemigo> enemigosAEliminar) {
         for (int i = 0; i < enemigos.size(); i++) {
             Enemigo enemigo1 = enemigos.get(i);
             for (int j = i + 1; j < enemigos.size(); j++) {
