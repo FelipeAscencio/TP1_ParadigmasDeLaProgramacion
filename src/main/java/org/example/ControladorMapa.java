@@ -2,10 +2,8 @@ package org.example;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.Duration;
 import java.util.Random;
 import java.util.ResourceBundle;
-
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -45,6 +43,7 @@ public class ControladorMapa implements Initializable {
     private static final int TAMANIO_CELDA = 32;
     private static final int TAMANIO_SPRITE = 32;
     private static final int CANTIDAD_SPRITES = 14;
+    private static final int CANTIDAD_SPRITES_INDIVIDUALES = 4;
     private static final int PRIMERA_POSICION = 0;
     private static final int GAMEOVER_POSICION = 4;
     private static final int POSICION_SPRITES_ROBOT1 = 5; //Se usa para reutilizar constantes indicando comiendo de sprites del robot1.
@@ -57,7 +56,7 @@ public class ControladorMapa implements Initializable {
     private int contadorAnimacion=0;
     private static int filas;
     private static int columnas;
-    private int estado_sprites=PRIMERA_POSICION;
+    private int estado_sprites;
     private WritableImage[] sprites;
     private Juego juego;
     private boolean game_over;
@@ -110,6 +109,41 @@ public class ControladorMapa implements Initializable {
         });
     }
 
+    private void animarElemento(ImageView imageView, Object elemento) {
+        if (game_over){
+            return;
+        }
+        Timeline timeline = new Timeline(new KeyFrame(javafx.util.Duration.millis(400), e -> {
+            Image nuevaImagen = obtenerImagenobjeto(elemento);
+            imageView.setImage(nuevaImagen);
+            contadorAnimacion++;
+            if (contadorAnimacion>CANTIDAD_SPRITES){
+                contadorAnimacion=0;
+            }
+        }));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
+    }
+
+    private Image obtenerImagenobjeto(Object elemento) {
+        if (estado_sprites==GAMEOVER_POSICION){
+            return obtenerGameOverSprite(elemento);
+        }
+        if (elemento instanceof Jugador) {
+            int indiceImagen = contadorAnimacion % CANTIDAD_SPRITES_INDIVIDUALES;
+            return sprites[indiceImagen];
+        } else if (elemento instanceof Robot1) {
+            int indiceImagen = contadorAnimacion % CANTIDAD_SPRITES_INDIVIDUALES;
+            return sprites[indiceImagen + POSICION_SPRITES_ROBOT1];
+        } else if (elemento instanceof Robot2) {
+            int indiceImagen = contadorAnimacion % CANTIDAD_SPRITES_INDIVIDUALES;
+            return sprites[indiceImagen + POSICION_SPRITES_ROBOT2];
+        } else if (elemento instanceof Explosion) {
+            return sprites[IMG_EXPLOSION];
+        }
+        return null;
+    }
+
     private WritableImage[] separarSprites(ImageView spriteStrip) {
         WritableImage[] sprites = new WritableImage[CANTIDAD_SPRITES];
         PixelReader pixelReader = spriteStrip.getImage().getPixelReader();
@@ -127,7 +161,6 @@ public class ControladorMapa implements Initializable {
         ImageView spriteStrip = new ImageView("file:doc/modelos.png");
         sprites = separarSprites(spriteStrip);
     }
-
 
     private Image obtenerGameOverSprite(Object elemento){
         if (elemento instanceof Jugador){
@@ -161,40 +194,6 @@ public class ControladorMapa implements Initializable {
             }
         }
 
-    }
-    private void animarElemento(ImageView imageView, Object elemento) {
-        if (game_over){
-            return;
-        }
-        Timeline timeline = new Timeline(new KeyFrame(javafx.util.Duration.millis(400), e -> {
-            Image nuevaImagen = obtenerImagenobjeto(elemento);
-            imageView.setImage(nuevaImagen);
-            contadorAnimacion++; //
-            if (contadorAnimacion>CANTIDAD_SPRITES){
-                contadorAnimacion=0;
-            }
-        }));
-        timeline.setCycleCount(Animation.INDEFINITE);
-        timeline.play();
-    }
-
-    private Image obtenerImagenobjeto(Object elemento) {
-        if (estado_sprites==GAMEOVER_POSICION){
-            return obtenerGameOverSprite(elemento);
-        }
-        if (elemento instanceof Jugador) {
-            int indiceImagen = contadorAnimacion % 4;
-            return sprites[indiceImagen];
-        } else if (elemento instanceof Robot1) {
-            int indiceImagen = contadorAnimacion % 4; // Suponiendo que tienes 4 imágenes de Robot1 en tu sprite
-            return sprites[indiceImagen + POSICION_SPRITES_ROBOT1];
-        } else if (elemento instanceof Robot2) {
-            int indiceImagen = contadorAnimacion % 4; // Suponiendo que tienes 4 imágenes de Robot2 en tu sprite
-            return sprites[indiceImagen + POSICION_SPRITES_ROBOT2]; // Imágenes de Robot2 después de las imágenes de Robot1
-        } else if (elemento instanceof Explosion) {
-            return sprites[IMG_EXPLOSION]; // Imagen de explosión
-        }
-        return null;
     }
 
     private void indicarFinJuego(){
