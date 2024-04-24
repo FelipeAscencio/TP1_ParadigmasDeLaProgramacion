@@ -33,8 +33,8 @@ En la carpeta "doc" se encuentra toda la documentación pertinenete respectiva a
 Listado del material:
 - Modelos de todas las flechas de dirección utilizadas en la "GUI".
 - Modelos "sprites" de los robots, la explosión y el jugador.
-- Diagrama UML de clases.
-- Diagrama UML de secuencia.
+- Diagrama UML de clases (.png y .puml).
+- Diagrama UML de secuencia (.png y .puml).
 
 ## Carpeta "src"
 
