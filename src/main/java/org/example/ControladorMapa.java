@@ -10,7 +10,9 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.ImageCursor;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -44,13 +46,10 @@ public class ControladorMapa implements Initializable {
     private static final int TAMANIO_SPRITE = 32;
     private static final int CANTIDAD_SPRITES = 14;
     private static final int CANTIDAD_SPRITES_INDIVIDUALES = 4;
-    private static final int PRIMERA_POSICION = 0;
     private static final int GAMEOVER_POSICION = 4;
     private static final int POSICION_SPRITES_ROBOT1 = 5; //Se usa para reutilizar constantes indicando comiendo de sprites del robot1.
     private static final int POSICION_SPRITES_ROBOT2 = 9; //Se usa para reutilizar constantes indicando comiendo de sprites del robot2.
     private static final int IMG_EXPLOSION = 13;
-    private static final double CORRECCION_X = 2; //Se usa para corregir la relaciòn de coordenadas X entre el mouse y el jugador.
-    private static final double CORRECION_Y = 1.05; //Se usa para corregir la relaciòn de coordenadas Y entre el mouse y el jugador.
     private static final int TAMANIO_CURSOR = 300;
     private static final int USOS_MINIMOS = 1;
     private int contadorAnimacion=0;
@@ -222,14 +221,34 @@ public class ControladorMapa implements Initializable {
         inicializarGrid();
     }
 
-    public Direccion hallarDireccion(MouseEvent event){
-        double filaJugador = (juego.getJugador().getFilaActual()) * TAMANIO_CELDA;
-        double colJugador = (juego.getJugador().getColumnaActual()) * TAMANIO_CELDA;
+    private int[] obtenerCasillaDelMouse(MouseEvent event) {
         double mouseX = event.getX();
         double mouseY = event.getY();
-        double diffX = mouseX - (colJugador * CORRECCION_X);
-        double diffY = mouseY - (filaJugador * CORRECION_Y);
-        return Direccion.calcular(diffX, diffY);
+
+        for (Node nodo : TableroGridpane.getChildren()) {
+            if (nodo instanceof StackPane) {
+                StackPane celda = (StackPane) nodo;
+                Bounds limitesCelda = celda.getBoundsInParent();
+
+                if (limitesCelda.contains(mouseX, mouseY)) {
+                    int fila = GridPane.getRowIndex(celda);
+                    int columna = GridPane.getColumnIndex(celda);
+                    return new int[]{fila, columna};
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public Direccion hallarDireccion(MouseEvent event){
+        double filaJugador = juego.getJugador().getFilaActual();
+        double colJugador = juego.getJugador().getColumnaActual();
+        int[] posicion_mouse = obtenerCasillaDelMouse(event);
+        assert posicion_mouse != null;
+        double mouseX = posicion_mouse[0];
+        double mouseY = posicion_mouse[1];
+        return Direccion.calcular(mouseX - colJugador, mouseY - filaJugador);
     }
 
     public void detectarClicMouse(MouseEvent event){
