@@ -125,7 +125,7 @@ El tipo de los robots que se generan es totalmente aleatorio, lo que hace que ca
 
 La cátedra brindó una "tira de sprites" con la que se trabajó para la representación de los personajes y la "animación" de los mismos.
 
-La "animación" que se implementó hace que en cada turno, los sprites de todos los robots vivos, y el jugador, cambien entre unas 4 posibilidades.
+La "animación" que se implementó hace que entre los turnos, los sprites de todos los robots vivos, y el jugador, cambien entre unas 4 posibilidades de forma automática.
 
 Por último, el jugador cuenta con un "sprite" específico de "Game Over", con el que indicarle de forma mas intuitiva (junto con los mensajes provistos por la "GUI") el final de la partida al usuario, para que pueda reiniciarla.
 
