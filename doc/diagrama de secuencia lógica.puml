@@ -1,0 +1,75 @@
+@startuml
+
+title Diagrama de Secuencia: Lógica del juego
+
+actor Usuario
+participant "Juego" as Juego
+participant "Tablero" as Tablero
+participant "Enemigo" as Enemigo
+participant "Jugador" as Jugador
+participant "Direccion" as Direccion
+participant "Explosion" as Explosion
+
+activate Usuario
+Usuario -> Juego: Inicia juego
+
+activate Juego
+Juego -> Tablero: Crea tablero
+activate Tablero
+Tablero --> Juego: Tablero creado
+Juego -> Juego: Genera enemigos según nivel
+Juego -> Tablero: Agrega enemigos al tablero
+Tablero --> Juego: Enemigos agregados al tablero
+deactivate Tablero
+
+Juego -> Juego: Inicia nivel
+
+loop Turnos
+    Juego -> Jugador: Mueve jugador
+    activate Jugador
+    Jugador -> Direccion: Obtener dirección
+    activate Direccion
+    Direccion --> Jugador: Dirección obtenida
+    deactivate Direccion
+    Jugador -> Jugador: Realiza movimiento jugador
+    deactivate Jugador
+    Juego -> Enemigo: Calcula movimiento enemigo respecto al jugador
+    activate Enemigo
+    Enemigo -> Direccion: Obtener dirección
+    activate Direccion
+    Direccion --> Enemigo: Dirección obtenida
+    deactivate Direccion
+    Enemigo -> Enemigo: Realiza movimiento de los enemigos
+    deactivate Enemigo
+    Juego -> Juego: Verifica colisiones
+    alt Hay colision entre jugador y enemigo/explosión
+            Juego -> Juego: Estado del juego pasa a Game Over
+        else Hay colision entre 2 enemigos
+            Juego -> Tablero: Generar explosion
+            activate Tablero
+            Tablero -> Explosion: Crear explosión
+            activate Explosion
+            Explosion --> Tablero: Explosión creada
+            Tablero --> Juego: Explosión generada
+            deactivate Tablero
+            deactivate Explosion
+            alt Todos los enemigos son explosiones
+                Juego -> Juego: Estado del juego pasa a Siguiente Nivel
+                end
+        end
+    
+    alt Estado = Game Over
+            Juego -> Usuario: Muestra mensaje de Game Over y finaliza el juego
+        else Estado = Siguiente Nivel
+            Juego -> Juego: Actualiza puntos
+            Juego -> Juego: Reinicia juego con siguiente nivel
+        else Estado = Continua el juego
+            Juego -> Juego: Actualiza nivel, puntos y tablero.
+            Juego -> Juego: Continúa con el siguiente turno
+        end
+end
+
+deactivate Juego
+deactivate Usuario
+
+@enduml

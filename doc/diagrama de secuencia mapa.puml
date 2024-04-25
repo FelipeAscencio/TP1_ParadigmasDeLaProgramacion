@@ -1,0 +1,33 @@
+@startuml
+
+title Diagrama de Secuencia: Creación e inicialización de la interfaz gráfica del juego
+
+actor Usuario
+
+participant "ControladorMapa" as Controlador
+participant "Juego" as Juego
+participant "TableroGridpane" as Tablero
+participant "Sprites" as Sprites
+
+activate Usuario
+Usuario -> Controlador: Inicia la aplicación
+
+Controlador -> Juego: Crea un nuevo juego
+activate Juego
+Juego -> Sprites: Carga sprites
+activate Sprites
+Sprites --> Juego: Sprites cargados
+deactivate Sprites
+Juego -> Controlador: Juego creado
+
+Controlador -> Tablero: Inicializa tablero
+activate Tablero
+Tablero --> Controlador: Tablero inicializado
+Controlador -> Tablero: Configura celdas y elementos
+Tablero --> Controlador: Celdas y elementos configurados
+deactivate Tablero
+
+Controlador -> Controlador: Asigna eventos de teclado y mouse
+Controlador -> Controlador: Espera interacción del usuario
+
+@enduml
