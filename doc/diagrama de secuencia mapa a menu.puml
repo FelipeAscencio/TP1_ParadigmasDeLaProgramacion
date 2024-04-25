@@ -1,0 +1,23 @@
+@startuml
+
+title Diagrama de Secuencia: Cambio a Menú desde Mapa
+
+participant Vista
+participant ControladorMapa
+participant ControladorMenu
+participant App
+
+activate Vista
+Vista -> ControladorMapa: Usuario presiona el botón "Volver al menú"
+activate ControladorMapa
+ControladorMapa -> App: Cambia a la escena del menú
+activate App
+App -> App: Cargar FXML del menú
+App -> ControladorMenu: Inicia controlador del menú
+activate ControladorMenu
+deactivate App
+deactivate ControladorMenu
+deactivate ControladorMapa
+deactivate Vista
+
+@enduml

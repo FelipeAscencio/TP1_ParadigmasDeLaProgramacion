@@ -1,0 +1,23 @@
+@startuml
+
+title Diagrama de Secuencia: Cambio a Tutorial desde Menú
+
+participant Vista
+participant ControladorMenu
+participant ControladorTutorial
+participant App
+
+activate Vista
+Vista -> ControladorMenu: Usuario presiona el botón "Ir al tutorial"
+activate ControladorMenu
+ControladorMenu -> App: Cambia a la escena del tutorial
+activate App
+App -> App: Cargar FXML del tutorial
+App -> ControladorTutorial: Inicia controlador del tutorial
+activate ControladorTutorial
+deactivate App
+deactivate ControladorTutorial
+deactivate ControladorMenu
+deactivate Vista
+
+@enduml
