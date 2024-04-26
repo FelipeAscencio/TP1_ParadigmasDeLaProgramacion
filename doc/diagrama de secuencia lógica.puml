@@ -57,14 +57,18 @@ loop Turnos
                 Juego -> Juego: Estado del juego pasa a Siguiente Nivel
                 end
         end
+
+    Juego -> Tablero: Actualizar tablero
+    activate Tablero
+    Tablero --> Juego: Tablero actualizado
+    deactivate Tablero
+    Juego -> Juego: Actualiza puntos
     
     alt Estado = Game Over
             Juego -> Usuario: Muestra mensaje de Game Over y finaliza el juego
         else Estado = Siguiente Nivel
-            Juego -> Juego: Actualiza puntos
             Juego -> Juego: Reinicia juego con siguiente nivel
         else Estado = Continua el juego
-            Juego -> Juego: Actualiza nivel, puntos y tablero.
             Juego -> Juego: Continúa con el siguiente turno
         end
 end
