@@ -41,8 +41,12 @@ public class ControladorMapa implements Initializable {
     public TextField FieldTPColumna;
     private static final int CASILLAS_DEFAULT = 15;
     private static final int CASILLAS_MIN = 5;
-    private static final int CASILLAS_MAX = 19;
-    private static final int TAMANIO_CELDA = 32;
+    private static final int CASILLAS_MAX = 35;
+    private static final int CANT_CELDAS1 = 19;
+    private static final int CANT_CELDAS2 = 25;
+    private static final int TAMANIO_CELDA1 = 32;
+    private static final int TAMANIO_CELDA2 = 24;
+    private static final int TAMANIO_CELDA3 = 16;
     private static final int TAMANIO_SPRITE = 32;
     private static final int CANTIDAD_SPRITES = 14;
     private static final int CANTIDAD_SPRITES_INDIVIDUALES = 4;
@@ -55,6 +59,7 @@ public class ControladorMapa implements Initializable {
     private int contadorAnimacion=0;
     private static int filas;
     private static int columnas;
+    private int tamanio_celda;
     private int estado_sprites;
     private WritableImage[] sprites;
     private Juego juego;
@@ -171,17 +176,27 @@ public class ControladorMapa implements Initializable {
     private void inicializarGrid() {
         TableroGridpane.getChildren().clear();
 
+        if (filas <= CANT_CELDAS1 && columnas <= CANT_CELDAS1){
+            tamanio_celda = TAMANIO_CELDA1;
+        } else if (filas >= CANT_CELDAS1 && filas <= CANT_CELDAS2){
+            tamanio_celda = TAMANIO_CELDA2;
+        } else if (columnas >= CANT_CELDAS1 && columnas <= CANT_CELDAS2){
+            tamanio_celda = TAMANIO_CELDA2;
+        } else {
+            tamanio_celda = TAMANIO_CELDA3;
+        }
+
         for (int fila = 0; fila < filas; fila++) {
             for (int columna = 0; columna < columnas; columna++) {
                 StackPane celda = new StackPane();
-                celda.setPrefSize(TAMANIO_CELDA, TAMANIO_CELDA);
+                celda.setPrefSize(tamanio_celda, tamanio_celda);
                 celda.setStyle("-fx-background-color: " + ((fila + columna) % 2 == 0 ? "white" : "lightblue"));
                 TableroGridpane.add(celda, columna, fila);
 
                 ImageView imageView = new ImageView();
                 imageView.setPreserveRatio(true);
-                imageView.setFitWidth(TAMANIO_CELDA);
-                imageView.setFitHeight(TAMANIO_CELDA);
+                imageView.setFitWidth(tamanio_celda);
+                imageView.setFitHeight(tamanio_celda);
                 Object elemento = juego.getTablero().getElemento(fila, columna);
                 if (elemento != null) {
                     Image nuevaImagen = obtenerImagenobjeto(elemento);
