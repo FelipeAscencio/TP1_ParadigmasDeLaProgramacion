@@ -109,6 +109,8 @@ Estos valores se determinaron en base a la resolución promedio de un monitor co
 
 Sin embargo, el "modelo" del juego no está limitado a valores específicos de "Filas" y "Columnas", por lo que con otra interfaz gráfica, o mínimas modificaciones de la actual, se podrían aumentar o reducir la cantidad de "Filas" y "Columnas" tanto como sea deseado.
 
+Por último, dependiendo el tamaño del mapa pedido y en relación a la mayor cantidad entre "filas" y "columnas" varía el tamaño de las celdas del tablero, para obtener mayor precisión y claridad de animaciones en mapas pequeños, pero también poder tener una visión amplia y clara en mapas mas grandes.
+
 ### Sistema de puntaje
 
 El sistema de puntaje del juego es simple. Por cada explosión el jugador gana "1" punto y el puntaje es acumulable entre niveles, es decir, que al avanzar de nivel los puntos obtenidos previamente siguen contando. ¿Cuánto será el máximo que podrás alcanzar?
