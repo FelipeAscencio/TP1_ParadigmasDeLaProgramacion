@@ -70,10 +70,12 @@ public class Juego {
     private boolean verificarColisionJugador(int fila, int columna) {
         for (Enemigo enemigo : enemigos) {
             if (enemigo.colisionJugador(fila,columna)){
+                game_over = true;
                 return true;
             }
         }
         if (tablero.hayExplosion(fila, columna)){
+            game_over = true;
             return true;
         }
         return false;
@@ -87,13 +89,10 @@ public class Juego {
         int nuevaColumna = jugador.getColumnaActual() + direccion.getCambioColumna();
         if (esMovimientoValido(nuevaFila, nuevaColumna)) {
             tablero.eliminarElemento(jugador.getFilaActual(), jugador.getColumnaActual());
-            if (verificarColisionJugador(nuevaFila, nuevaColumna)){
-                game_over = true;
-                return;
-            }
             jugador.mover(direccion);
             tablero.agregarElemento(jugador, nuevaFila, nuevaColumna);
         }
+        verificarColisionJugador(nuevaFila, nuevaColumna);
         moverEnemigos();
     }
 
@@ -121,20 +120,22 @@ public class Juego {
         }
     }
 
+    private void analizarColisionEnemigos(Enemigo enemigo1, Enemigo enemigo2){
+
+    }
+
     private void verificarColisionEnemigos(List<Enemigo> enemigosAEliminar) {
         for (int i = 0; i < enemigos.size(); i++) {
             Enemigo enemigo1 = enemigos.get(i);
             for (int j = i + 1; j < enemigos.size(); j++) {
                 Enemigo enemigo2 = enemigos.get(j);
+                analizarColisionEnemigos(enemigo1, enemigo2);
                 if (enemigo1.getFilaActual() == enemigo2.getFilaActual() &&
                         enemigo1.getColumnaActual() == enemigo2.getColumnaActual()) {
                     enemigosAEliminar.add(enemigo1);
                     enemigosAEliminar.add(enemigo2);
                     puntos++;
-                    if (verificarColisionJugador(jugador.getFilaActual(), jugador.getColumnaActual())){
-                        game_over = true;
-                        return;
-                    }
+                    verificarColisionJugador(jugador.getFilaActual(), jugador.getColumnaActual());
                     Explosion explosion = new Explosion(enemigo1.getFilaActual(), enemigo1.getColumnaActual());
                     tablero.agregarElemento(explosion, enemigo1.getFilaActual(), enemigo1.getColumnaActual());
                 }
@@ -208,9 +209,7 @@ public class Juego {
         jugador.setFila(fila);
         jugador.setColumna(columna);
         moverEnemigos();
-        if (verificarColisionJugador(jugador.getFilaActual(), jugador.getColumnaActual())){
-            game_over = true;
-        }
+        verificarColisionJugador(jugador.getFilaActual(), jugador.getColumnaActual());
         tablero.agregarElemento(jugador,jugador.getFilaActual(), jugador.getColumnaActual());
     }
 }
