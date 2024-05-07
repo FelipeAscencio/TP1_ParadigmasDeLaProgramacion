@@ -3,21 +3,21 @@
 title Diagrama de Secuencia: Cambio a Mapa desde Menú
 
 participant Vista
-participant ControladorMenu
-participant ControladorMapa
+participant VistaMenu
+participant VistaMapa
 participant App
 
 activate Vista
-Vista -> ControladorMenu: Usuario presiona el botón "JUGAR"
-activate ControladorMenu
-ControladorMenu -> App: Cambia a la escena del mapa
+Vista -> VistaMenu: Usuario presiona el botón "JUGAR"
+activate VistaMenu
+VistaMenu -> App: Cambia a la escena del mapa
 activate App
 App -> App: Cargar FXML del mapa
-App -> ControladorMapa: Inicia controlador del mapa
-activate ControladorMapa
+App -> VistaMapa: Inicia Vista del mapa
+activate VistaMapa
 deactivate App
-deactivate ControladorMapa
-deactivate ControladorMenu
+deactivate VistaMapa
+deactivate VistaMenu
 deactivate Vista
 
 @enduml
