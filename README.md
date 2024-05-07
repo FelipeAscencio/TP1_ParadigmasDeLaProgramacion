@@ -72,9 +72,9 @@ Nos ayudamos del patrón de arquitectura "MVC" para dividir los conceptos de "mo
 
 Archivos relacionados:
 - App.java
-- ControladorMapa.java
-- ControladorMenu.java
-- ControladorTutorial.java
+- VistaMapa.java
+- VistaMenu.java
+- VistaTutorial.java
 - mapa.fxml
 - menu.fxml
 - tutorial.fxml
@@ -93,7 +93,7 @@ La interfaz gráfica desarrollada está pensada para ser lo mas intuitiva y simp
 
 La implementación tiene, como se solicita en el enunciado, los comportamientos polimorficos relacionados a los robots y las celdas incendiadas.
 
-Las 3 clases heredan desde la superclase "Enemigo", utilizan métodos heredados con resultados distintos (definición de polimorfismo), y también tienen sus comportamientos y atributos particulares que los caracterízan.
+Las 3 clases heredan desde la misma superclase, utilizan métodos heredados con resultados distintos (definición de polimorfismo), y también tienen sus comportamientos y atributos particulares que los caracterízan.
 
 ### Jugabilidad
 
