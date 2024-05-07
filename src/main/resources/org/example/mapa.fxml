@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: lightgray; -fx-border-color: red;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.ControladorMapa">
+<VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: lightgray; -fx-border-color: red;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.VistaMapa">
     <children>
       <AnchorPane maxHeight="49.0" maxWidth="500.0" minHeight="22.0" minWidth="493.0" prefHeight="27.0" prefWidth="500.0">
          <children>
