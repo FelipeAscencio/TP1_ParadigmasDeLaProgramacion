@@ -378,18 +378,19 @@ public class VistaMapa implements Initializable {
 
     @FXML
     private void cambiarMapa(){
-        if (!game_over){
-            int nuevas_filas = Integer.parseInt(FieldFilas.getText());
-            int nuevas_columnas = Integer.parseInt(FieldColumnas.getText());
-            if (nuevas_filas >= CASILLAS_MIN && nuevas_filas <= CASILLAS_MAX) {
-                if (nuevas_columnas >= CASILLAS_MIN && nuevas_columnas <= CASILLAS_MAX){
-                    filas = nuevas_filas;
-                    columnas = nuevas_columnas;
-                    cargarMapa();
-                }
-            }
-            TableroGridpane.requestFocus();
+        if (game_over){
+            return;
         }
+        int nuevas_filas = Integer.parseInt(FieldFilas.getText());
+        int nuevas_columnas = Integer.parseInt(FieldColumnas.getText());
+        if (nuevas_filas >= CASILLAS_MIN && nuevas_filas <= CASILLAS_MAX) {
+            if (nuevas_columnas >= CASILLAS_MIN && nuevas_columnas <= CASILLAS_MAX){
+                filas = nuevas_filas;
+                columnas = nuevas_columnas;
+                cargarMapa();
+            }
+        }
+        TableroGridpane.requestFocus();
     }
 
     @FXML
@@ -480,18 +481,20 @@ public class VistaMapa implements Initializable {
     }
 
     private void comandoG() {
-        if (!game_over){
-            int turnos = juego.getUsosTeletransportacion();
-            if (turnos >= USOS_MINIMOS){
-                int nueva_fila = Integer.parseInt(FieldTPFila.getText());
-                int nueva_columna = Integer.parseInt(FieldTPColumna.getText());
-                if (nueva_fila >= 0 && nueva_fila < filas) {
-                    if (nueva_columna >= 0 && nueva_columna < columnas){
-                        juego.jugadorteletransportacion(nueva_fila, nueva_columna, true);
-                        juego.moverEnemigos();
-                        actualizarTurno();
-                    }
-                }
+        if (game_over){
+            return;
+        }
+        int turnos = juego.getUsosTeletransportacion();
+        if (turnos <= USOS_MINIMOS){
+            return;
+        }
+        int nueva_fila = Integer.parseInt(FieldTPFila.getText());
+        int nueva_columna = Integer.parseInt(FieldTPColumna.getText());
+        if (nueva_fila >= 0 && nueva_fila < filas) {
+            if (nueva_columna >= 0 && nueva_columna < columnas){
+                juego.jugadorteletransportacion(nueva_fila, nueva_columna, true);
+                juego.moverEnemigos();
+                actualizarTurno();
             }
         }
     }

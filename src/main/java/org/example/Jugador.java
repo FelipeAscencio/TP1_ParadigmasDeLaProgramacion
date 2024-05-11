@@ -2,7 +2,6 @@ package org.example;
 
 public class Jugador extends Personaje {
 
-
     public Jugador(int filaActual,int columnaActual){
         super(filaActual,columnaActual);
     }
