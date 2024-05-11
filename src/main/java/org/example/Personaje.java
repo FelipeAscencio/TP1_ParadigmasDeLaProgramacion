@@ -1,10 +1,10 @@
 package org.example;
 
-public abstract class Enemigo {
+public abstract class Personaje {
     private int filaActual;
     private int columnaActual;
 
-    public Enemigo(int filaInicial, int columnaInicial) {
+    public Personaje(int filaInicial, int columnaInicial) {
         this.filaActual = filaInicial;
         this.columnaActual = columnaInicial;
     }

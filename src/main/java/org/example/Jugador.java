@@ -1,32 +1,36 @@
 package org.example;
 
-public class Jugador {
-    private int filaActual;
-    private int columnaActual;
+public class Jugador extends Personaje {
+
 
     public Jugador(int filaActual,int columnaActual){
-        this.columnaActual=columnaActual;
-        this.filaActual=filaActual;
+        super(filaActual,columnaActual);
     }
 
-    public int getFilaActual() {
-        return filaActual;
+    @Override
+    public void mover(int filaJugador, int columnaJugador) {
+        int nuevaFila=getFilaActual();
+        int nuevaColumna=getColumnaActual();
+
+        setColumnaActual(nuevaColumna);
+        setFilaActual(nuevaFila);
     }
 
-    public int getColumnaActual() {
-        return columnaActual;
+    public void mover(Direccion direccion) {
+        int nuevaFila=getFilaActual();
+        int nuevaColumna=getColumnaActual();
+        nuevaFila+=direccion.getCambioFila();
+        nuevaColumna+=direccion.getCambioColumna();
+
+        setColumnaActual(nuevaColumna);
+        setFilaActual(nuevaFila);
     }
 
-    public void setFila(int fila){
-        filaActual=fila;
+    public void setFila(int fil){
+        setFilaActual(fil);
     }
 
-    public void setColumna(int columna){
-        columnaActual=columna;
-    }
-
-    public void mover(Direccion direccion){
-        filaActual+=direccion.getCambioFila();
-        columnaActual+=direccion.getCambioColumna();
+    public void setColumna(int col){
+        setColumnaActual(col);
     }
 }

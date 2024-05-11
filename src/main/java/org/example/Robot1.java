@@ -1,6 +1,6 @@
 package org.example;
 
-public class Robot1 extends Enemigo{
+public class Robot1 extends Personaje{
     public Robot1(int filaInicial, int columnaInicial) {
         super(filaInicial, columnaInicial);
     }

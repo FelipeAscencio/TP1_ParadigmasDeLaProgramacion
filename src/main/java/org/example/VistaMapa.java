@@ -260,6 +260,9 @@ public class VistaMapa implements Initializable {
         double filaJugador = juego.getJugador().getFilaActual();
         double colJugador = juego.getJugador().getColumnaActual();
         int[] posicion_mouse = obtenerCasillaDelMouse(event);
+        if (posicion_mouse==null){
+            return null;
+        }
         assert posicion_mouse != null;
         double mouseX = posicion_mouse[0];
         double mouseY = posicion_mouse[1];
@@ -268,6 +271,9 @@ public class VistaMapa implements Initializable {
 
     public void detectarClicMouse(MouseEvent event){
         Direccion direccion = hallarDireccion(event);
+        if (direccion==null){
+            return;
+        }
         switch (direccion) {
             case ARRIBA:
                 comandoW();
@@ -298,6 +304,9 @@ public class VistaMapa implements Initializable {
 
     public void detectarDireccionMouse(MouseEvent event){
         Direccion direccion = hallarDireccion(event);
+        if (direccion==null){
+            return;
+        }
         double tamanioCursor = TAMANIO_CURSOR;
         Image cursorArriba = new Image("file:doc/up.png", tamanioCursor, tamanioCursor, true, true);
         Image cursorAbajo = new Image("file:doc/down.png", tamanioCursor, tamanioCursor, true, true);

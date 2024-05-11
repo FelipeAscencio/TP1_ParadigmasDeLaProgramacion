@@ -6,7 +6,7 @@ public class Juego {
     private static final int USOS_MINIMOS = 1;
     private Jugador jugador;
     private Tablero tablero;
-    private List<Enemigo> enemigos;
+    private List<Personaje> enemigos;
     private int CANTIDAD_INICIAL_ENEMIGOS = 5;
     private int nivel;
     private int puntos;
@@ -21,7 +21,7 @@ public class Juego {
                 filaAleatoria = random.nextInt(tablero.getFilas());
                 columnaAleatoria = random.nextInt(tablero.getColumnas());
             } while (esPosicionOcupada(filaAleatoria, columnaAleatoria));
-            Enemigo nuevoEnemigo;
+            Personaje nuevoEnemigo;
             if (random.nextBoolean()){
                 nuevoEnemigo=new Robot1(filaAleatoria,columnaAleatoria);
             }
@@ -38,7 +38,7 @@ public class Juego {
     }
 
     private void agregarelementostablero(){
-        for (Enemigo enemigo: enemigos){
+        for (Personaje enemigo: enemigos){
             if (enemigo.colisionJugador(jugador.getFilaActual(),jugador.getColumnaActual())){
                 game_over=true;
                 return;
@@ -68,7 +68,8 @@ public class Juego {
     }
 
     private boolean verificarColisionJugador(int fila, int columna) {
-        for (Enemigo enemigo : enemigos) {
+        tablero.agregarElemento(jugador, jugador.getFilaActual(), jugador.getColumnaActual());
+        for (Personaje enemigo : enemigos) {
             if (enemigo.colisionJugador(fila,columna)){
                 game_over = true;
                 return true;
@@ -96,15 +97,15 @@ public class Juego {
         moverEnemigos();
     }
 
-    public int movimientointermediofila(Enemigo enemigo){
+    public int movimientointermediofila(Personaje enemigo){
         return enemigo.getFilaActual()+enemigo.calcularDireccion(enemigo.getFilaActual(), jugador.getFilaActual());
     }
 
-    public int movimientointermediocol(Enemigo enemigo){
+    public int movimientointermediocol(Personaje enemigo){
         return enemigo.getColumnaActual()+enemigo.calcularDireccion(enemigo.getColumnaActual(),jugador.getColumnaActual());
     }
 
-    private void manejarMovimientoRobot2(Enemigo robot2, List<Enemigo> enemigosAEliminar) {
+    private void manejarMovimientoRobot2(Personaje robot2, List<Personaje> enemigosAEliminar) {
         int filaprimermov = movimientointermediofila(robot2);
         int colprimermov = movimientointermediocol(robot2);
 
@@ -114,30 +115,29 @@ public class Juego {
         } else if (tablero.hayEnemigo(filaprimermov, colprimermov)) {
             Explosion explosion = new Explosion(filaprimermov, colprimermov);
             enemigosAEliminar.add(robot2);
-            enemigosAEliminar.add((Enemigo) tablero.getElemento(filaprimermov, colprimermov));
+            enemigosAEliminar.add((Personaje) tablero.getElemento(filaprimermov, colprimermov));
             tablero.agregarElemento(explosion, filaprimermov, colprimermov);
             puntos++;
         }
     }
 
-    private void analizarColisionEnemigos(Enemigo enemigo1, Enemigo enemigo2){
-
+    public boolean colisionPersonajes(Personaje personaje1, Personaje personaje2){
+        return (personaje1.getFilaActual() == personaje2.getFilaActual()) &&
+                (personaje1.getColumnaActual() == personaje2.getColumnaActual());
     }
 
-    private void verificarColisionEnemigos(List<Enemigo> enemigosAEliminar) {
+    private void verificarColisionEnemigos(List<Personaje> enemigosAEliminar) {
         for (int i = 0; i < enemigos.size(); i++) {
-            Enemigo enemigo1 = enemigos.get(i);
+            Personaje enemigo1 = enemigos.get(i);
             for (int j = i + 1; j < enemigos.size(); j++) {
-                Enemigo enemigo2 = enemigos.get(j);
-                analizarColisionEnemigos(enemigo1, enemigo2);
-                if (enemigo1.getFilaActual() == enemigo2.getFilaActual() &&
-                        enemigo1.getColumnaActual() == enemigo2.getColumnaActual()) {
+                Personaje enemigo2 = enemigos.get(j);
+                if (colisionPersonajes(enemigo1,enemigo2)) {
                     enemigosAEliminar.add(enemigo1);
                     enemigosAEliminar.add(enemigo2);
                     puntos++;
-                    verificarColisionJugador(jugador.getFilaActual(), jugador.getColumnaActual());
                     Explosion explosion = new Explosion(enemigo1.getFilaActual(), enemigo1.getColumnaActual());
                     tablero.agregarElemento(explosion, enemigo1.getFilaActual(), enemigo1.getColumnaActual());
+                    verificarColisionJugador(jugador.getFilaActual(), jugador.getColumnaActual());
                 }
             }
         }
@@ -153,9 +153,9 @@ public class Juego {
     public void moverEnemigos() {
         int filamoverse=jugador.getFilaActual();
         int colmoverse= jugador.getColumnaActual();
-        List<Enemigo> enemigosAEliminar = new ArrayList<>();
-        for (Enemigo enemigo : enemigos) {
-            if (!(tablero.getElemento(enemigo.getFilaActual(), enemigo.getColumnaActual()) instanceof Explosion)){
+        List<Personaje> enemigosAEliminar = new ArrayList<>();
+        for (Personaje enemigo : enemigos) {
+            if (!(tablero.getElemento(enemigo.getFilaActual(),enemigo.getColumnaActual()) instanceof Explosion)){
                 tablero.eliminarElemento(enemigo.getFilaActual(),enemigo.getColumnaActual());
             }
             if (enemigo instanceof Robot2){

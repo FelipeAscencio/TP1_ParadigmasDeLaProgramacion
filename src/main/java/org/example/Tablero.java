@@ -29,7 +29,7 @@ public class Tablero {
 
     public boolean hayEnemigo(int fila, int col){
         Object elemento=getElemento(fila,col);
-        return elemento instanceof Enemigo;
+        return elemento instanceof Robot1 || elemento instanceof Robot2;
     }
 
     public void eliminarElemento(int fila, int columna) {

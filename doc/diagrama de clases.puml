@@ -2,12 +2,15 @@
 
 title Diagrama de Clases
 
-Juego o-- "1..*" Enemigo : enemigos
+Juego o-- "1..*" Personaje : enemigos
 Juego *-- Tablero : tablero
 Juego *-- Jugador : jugador
-Robot1 --|> Enemigo
-Robot2 --|> Enemigo
-Explosion --|> Enemigo
+Robot1 --|> Personaje
+Robot2 --|> Personaje
+Explosion --|> Personaje
+Jugador --|> Personaje
+Tablero o-- "1..*" Explosion
+
 
 class Juego {
     - static final int USOS_MINIMOS
@@ -30,7 +33,7 @@ class Juego {
     + void jugadorTeletransportacion(int fila, int col, boolean seguro)
 }
 
-abstract class Enemigo{
+abstract class Personaje{
 -int filaActual
 -int columnaActual
 
@@ -55,6 +58,7 @@ class Jugador{
 -int filaActual
 -int columnaActual
 +void mover(Direccion direccion)
++void mover(int filaJugador, int columnaJugador)
 }
 
 class Tablero{
