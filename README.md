@@ -68,8 +68,6 @@ Esta capa cuenta principalmente de la clase "App.java", que permite la ejecució
 
 Y cuenta con 3 archivos ".fxml", con sus respectivas clases asociadas (vistas), para la implementación de cada escenario.
 
-Nos ayudamos del patrón de arquitectura "MVC" para dividir los conceptos de "modelo" (antes explicado), vista y controlador. Fusionando estos últimos 2 en esta capa de abstracción, para ayudarnos a manejar de forma mas eficiente los archivos ".fxml" y conseguir mejores resultados en la implementación tanto del apartado de funcionamiento como en el visual.
-
 Archivos relacionados:
 - App.java
 - VistaMapa.java
