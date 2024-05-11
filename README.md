@@ -59,6 +59,7 @@ Archivos relacionados:
 - Robot1.java
 - Robot2.java
 - Tablero.java
+- Personaje.java
 
 ### Capa gráfica de abstracción (vista)
 
