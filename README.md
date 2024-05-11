@@ -60,7 +60,7 @@ Archivos relacionados:
 - Robot2.java
 - Tablero.java
 
-### Capa gráfica de abstracción (vista + controladores)
+### Capa gráfica de abstracción (vista)
 
 En esta capa se encuentra toda la implementación "gráfica" o "visual" del juego.
 
