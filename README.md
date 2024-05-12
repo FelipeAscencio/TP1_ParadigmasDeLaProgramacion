@@ -52,7 +52,6 @@ Estas clases son totalmente reutilizables para otros juegos, o variaciones del m
 
 Archivos relacionados:
 - Direccion.java
-- Enemigo.java
 - Explosion.java
 - Juego.java
 - Jugador.java
