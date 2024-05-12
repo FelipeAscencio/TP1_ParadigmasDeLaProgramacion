@@ -3,77 +3,102 @@
 title Diagrama de Secuencia: Lógica del juego
 
 actor Usuario
+participant "VistaMapa" as Vista
 participant "Juego" as Juego
 participant "Tablero" as Tablero
-participant "Enemigo" as Enemigo
-participant "Jugador" as Jugador
 participant "Direccion" as Direccion
-participant "Explosion" as Explosion
+participant "Jugador" as Jugador
+participant "Enemigo" as Enemigo
+participant "Personaje" as Personaje
 
 activate Usuario
-Usuario -> Juego: Inicia juego
+Usuario -> Vista: Cambia del menu al mapa
+activate Vista
 
+ref over Vista: Inicialización del Juego y GUI
 activate Juego
-Juego -> Tablero: Crea tablero
-activate Tablero
-Tablero --> Juego: Tablero creado
-Juego -> Juego: Genera enemigos según nivel
-Juego -> Tablero: Agrega enemigos al tablero
-Tablero --> Juego: Enemigos agregados al tablero
-deactivate Tablero
-
-Juego -> Juego: Inicia nivel
 
 loop Turnos
-    Juego -> Jugador: Mueve jugador
-    activate Jugador
-    Jugador -> Direccion: Obtener dirección
-    activate Direccion
-    Direccion --> Jugador: Dirección obtenida
-    deactivate Direccion
-    Jugador -> Jugador: Realiza movimiento jugador
-    deactivate Jugador
-    Juego -> Enemigo: Calcula movimiento enemigo respecto al jugador
-    activate Enemigo
-    Enemigo -> Direccion: Obtener dirección
-    activate Direccion
-    Direccion --> Enemigo: Dirección obtenida
-    deactivate Direccion
-    Enemigo -> Enemigo: Realiza movimiento de los enemigos
-    deactivate Enemigo
-    Juego -> Juego: Verifica colisiones
-    alt Hay colision entre jugador y enemigo/explosión
-            Juego -> Juego: Estado del juego pasa a Game Over
-        else Hay colision entre 2 enemigos
-            Juego -> Tablero: Generar explosion
-            activate Tablero
-            Tablero -> Explosion: Crear explosión
-            activate Explosion
-            Explosion --> Tablero: Explosión creada
-            Tablero --> Juego: Explosión generada
-            deactivate Tablero
-            deactivate Explosion
-            alt Todos los enemigos son explosiones
-                Juego -> Juego: Estado del juego pasa a Siguiente Nivel
-                end
+    Usuario -> Vista: Usuario realiza una acción
+        alt Usuario pulsa "reiniciar"
+                Vista -> Vista: Reinicia el juego desde 0
+            else Usuario cambia tamaño del tablero
+                Vista -> Vista: Reinicia el juego con nuevas dimensiones
+            else
+                Vista -> Juego: Informa acción realizada al modelo
         end
 
-    Juego -> Tablero: Actualizar tablero
-    activate Tablero
-    Tablero --> Juego: Tablero actualizado
-    deactivate Tablero
-    Juego -> Juego: Actualiza puntos
-    
-    alt Estado = Game Over
-            Juego -> Usuario: Muestra mensaje de Game Over y finaliza el juego
-        else Estado = Siguiente Nivel
-            Juego -> Juego: Reinicia juego con siguiente nivel
-        else Estado = Continua el juego
-            Juego -> Juego: Continúa con el siguiente turno
+        Juego -> Direccion: Obtener nueva dirección
+        activate Direccion
+        Direccion --> Juego: Nueva dirección obtenida
+        deactivate Direccion
+
+        Juego -> Jugador: Indica cambio de posición al Jugador
+        activate Jugador
+        Jugador -> Jugador: Jugador cambia de posición
+        Jugador --> Juego: Nueva posición del Jugador
+        deactivate Jugador
+
+        Juego -> Tablero: Actualizar posición del Jugador
+        activate Tablero
+        Tablero --> Juego: Posición del Jugador actualizada
+        deactivate Tablero
+
+        Juego -> Juego: Verificar colisión del Jugador
+        alt Jugador colisiona con Enemigo
+            Juego -> Juego: Estado pasa a ser "Game Over"
+        end
+
+        loop Lista de Enemigos
+            Juego -> Enemigo: Solicitar desplazamiento a enemigos
+            activate Enemigo
+            alt Enemigo = Explosion
+                Enemigo -> Juego: Enemigo no se desplaza
+                else
+                Enemigo -> Personaje: Calcular nueva dirección
+                activate Personaje
+                Personaje -> Personaje: Calcula nueva dirección
+                Personaje -> Enemigo: Nueva posición calculada
+                deactivate Personaje
+                Enemigo -> Enemigo: Realizar desplazamiento
+                Enemigo --> Juego: Desplazamiento realizado
+                deactivate Enemigo
+                Juego -> Juego: Verificar choque de enemigos entre si
+                alt Hay colisión de enemigos
+                    Juego -> Enemigo: Eliminar enemigo/s
+                    activate Enemigo
+                    Enemigo --> Juego: Enemigo/s eliminado/s
+                    deactivate Enemigo
+                    Juego -> Tablero: Añadir Explosión
+                    activate Tablero
+                    Tablero --> Juego: Explosión añadida
+                    deactivate Tablero
+                    Juego -> Juego: Aumentar puntaje
+                    alt No quedan mas enemigos
+                        Juego -> Juego: Estado pasa a ser "Siguiente Nivel"
+                        end
+                end
+            end
+        end
+
+        Juego -> Juego: Verificar colisión del Jugador
+        alt Jugador colisiona con Enemigo
+            Juego -> Juego: Estado pasa a ser "Game Over"
+        end
+
+        Juego -> Vista: Actualizar vista del Juego
+
+        Vista -> Vista: Actualiza estado del tablero y del juego
+        alt Estado = Game Over
+                Vista -> Usuario: Muestra mensaje de Game Over y finaliza el juego
+            else Estado = Siguiente Nivel
+                Vista -> Vista: Reinicia el juego con siguiente nivel
+            else Estado = Continua el juego
+                Vista -> Vista: Continúa con el siguiente turno
         end
 end
 
-deactivate Juego
+deactivate Vista
 deactivate Usuario
 
 @enduml
